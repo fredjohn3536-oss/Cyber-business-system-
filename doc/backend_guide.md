@@ -16,10 +16,18 @@ To initialize the backend:
    ```bash
    cd backend
    ```
-2. Create a virtual environment:
+2. Create and activate a virtual environment:
+
+   **For Linux / macOS:**
    ```bash
    python3 -m venv venv
    source venv/bin/activate
+   ```
+   
+   **For Windows 11 (Command Prompt / PowerShell):**
+   ```cmd
+   python -m venv venv
+   venv\Scripts\activate
    ```
 3. Install required packages:
    ```bash
