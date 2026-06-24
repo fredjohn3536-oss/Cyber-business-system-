@@ -1,2 +1,609 @@
-# Cyber-business-system-
-Cyber business system 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Cyber Business System | Seller Hub</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: #0f172a;
+      color: #f1f5f9;
+    }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 20px;
+      background: #111827;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid #1e293b;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    .profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .profile img {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #1e293b;
+      object-fit: cover;
+      cursor: pointer;
+      border: 2px solid #3b82f6;
+      transition: 0.2s;
+    }
+    .profile div b {
+      font-size: 1.1rem;
+      background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+    .nav {
+      display: flex;
+      gap: 12px;
+    }
+    .nav button {
+      background: #1f2937;
+      color: white;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      font-size: 0.9rem;
+    }
+    .nav button:hover {
+      background: #2563eb;
+      transform: translateY(-2px);
+    }
+    .menu {
+      font-size: 28px;
+      cursor: pointer;
+      padding: 5px 12px;
+      background: #1e293b;
+      border-radius: 30px;
+      transition: 0.2s;
+    }
+    .menuBox {
+      display: none;
+      position: absolute;
+      right: 20px;
+      top: 70px;
+      background: #1e293b;
+      backdrop-filter: blur(12px);
+      padding: 12px;
+      border-radius: 20px;
+      z-index: 200;
+      box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.5);
+      border: 1px solid #334155;
+      min-width: 180px;
+    }
+    .menuBox button {
+      width: 100%;
+      margin: 6px 0;
+      padding: 10px;
+      border: none;
+      border-radius: 40px;
+      background: #0f172a;
+      color: white;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    .menuBox button:hover {
+      background: #2563eb;
+    }
+    .page {
+      display: none;
+      padding: 20px 24px;
+      animation: fade 0.25s ease;
+    }
+    .active {
+      display: block;
+    }
+    @keyframes fade {
+      from { opacity: 0; transform: translateY(6px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    .card {
+      background: #1e293b;
+      padding: 18px;
+      margin: 14px 0;
+      border-radius: 24px;
+      border-left: 4px solid #3b82f6;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    }
+    input, select {
+      width: 100%;
+      padding: 12px 14px;
+      margin: 10px 0;
+      border-radius: 28px;
+      border: none;
+      background: #0f172a;
+      color: white;
+      font-size: 0.9rem;
+      outline: none;
+      border: 1px solid #334155;
+    }
+    input:focus, select:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 2px rgba(59,130,246,0.3);
+    }
+    button.action {
+      background: #3b82f6;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1rem;
+      margin: 12px 0 8px 0;
+      width: 100%;
+    }
+    button.action:hover {
+      background: #2563eb;
+      transform: scale(0.98);
+    }
+    .low { color: #f87171; }
+    .ok { color: #4ade80; }
+    h2 {
+      font-weight: 600;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.6rem;
+    }
+    .admin-badge {
+      background: linear-gradient(95deg, #0f172a, #1e293b);
+      border-radius: 60px;
+      margin-top: 20px;
+      text-align: center;
+    }
+    .admin-link-btn {
+      background: transparent;
+      border: 1.5px solid #3b82f6;
+      color: #60a5fa;
+      padding: 10px 18px;
+      border-radius: 40px;
+      font-weight: bold;
+      cursor: pointer;
+      width: auto;
+      display: inline-block;
+      margin: 5px 0;
+    }
+    .admin-link-btn:hover {
+      background: #2563eb;
+      color: white;
+    }
+    .info-note {
+      background: #1e293b80;
+      border-radius: 20px;
+      padding: 12px;
+      text-align: center;
+      font-size: 0.85rem;
+      margin-top: 20px;
+      color: #94a3b8;
+    }
+    /* Sales page specific */
+    .category-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .cat-btn {
+      background: #1f2937;
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: 0.2s;
+    }
+    .cat-btn.active-cat {
+      background: #3b82f6;
+      box-shadow: 0 0 8px #3b82f6;
+    }
+    .products-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .product-sell-card {
+      background: #0f172a;
+      border-radius: 20px;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      border: 1px solid #334155;
+    }
+    .product-info {
+      flex: 2;
+    }
+    .product-info strong {
+      color: #facc15;
+      font-size: 1.1rem;
+    }
+    .sell-form {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .sell-form input {
+      width: 100px;
+      margin: 0;
+      padding: 8px 12px;
+    }
+    .sell-btn {
+      background: #22c55e;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 30px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .sell-btn:hover {
+      background: #16a34a;
+    }
+    .receipt-area {
+      margin-top: 30px;
+      background: #111827;
+      border-radius: 24px;
+      padding: 16px;
+      border-left: 5px solid #22c55e;
+    }
+    .receipt-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #86efac;
+    }
+    .receipt-details {
+      font-family: monospace;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+    .empty-cat {
+      text-align: center;
+      padding: 30px;
+      background: #1e293b;
+      border-radius: 28px;
+      color: #94a3b8;
+    }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="profile">
+    <img id="bizImg" onclick="uploadStoreLogo()" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233b82f6'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0 13c-2.33 0-4.31-1.46-5.11-3.5h10.22c-.8 2.04-2.78 3.5-5.11 3.5z'/%3E%3C/svg%3E" alt="store">
+    <div><b>⚡ My Business</b></div>
+  </div>
+  <div class="nav">
+    <button onclick="showPage('home')">🏠 Home</button>
+    <button onclick="showPage('products')">📦 Products</button>
+    <button onclick="showPage('sales')">💰 Sales</button>
+  </div>
+  <div class="menu" onclick="toggleMenu()">⋮</div>
+</div>
+
+<div class="menuBox" id="menuBox">
+  <button onclick="window.open('admin.html', '_blank')">🛡️ Admin Panel (Open new tab)</button>
+</div>
+
+<div id="home" class="page active">
+  <h2>🔥 Hot Weekly Ads</h2>
+  <div class="card">🚀 50% OFF - Latest Smartphones & Accessories</div>
+  <div class="card">🛋️ Furniture Blowout: Up to 40% OFF</div>
+  <div class="card">💻 Laptop Fest: Discounts + Free Mouse</div>
+  <div class="card admin-badge">
+    <span>🔐 Full business analytics & stock overview → </span>
+    <button class="admin-link-btn" onclick="window.open('admin.html', '_blank')">📊 Launch Admin Dashboard</button>
+  </div>
+</div>
+
+<div id="products" class="page">
+  <h2>📦 Add New Product</h2>
+  <div style="background:#1e293b; border-radius: 32px; padding: 18px;">
+    <input id="pname" placeholder="Product name" autocomplete="off">
+    <input id="pcat" placeholder="Category (e.g., Electronics, Phone, Furniture, Food)">
+    <input id="pqty" type="number" placeholder="Quantity in stock">
+    <input id="pbuy" type="number" placeholder="Buying price (cost)">
+    <input id="pexp" type="number" placeholder="Expected selling price">
+    <button class="action" onclick="addNewProduct()">➕ Add Product</button>
+  </div>
+  <div class="info-note">
+    ℹ️ Products added here will appear in the Sales page categorized by their category.
+  </div>
+</div>
+
+<!-- NEW SALES PAGE: Category filters + product cards + transaction receipt -->
+<div id="sales" class="page">
+  <h2>💸 Point of Sale</h2>
+  <!-- Category buttons will be injected dynamically -->
+  <div id="categoryBar" class="category-bar"></div>
+  <!-- Products grid based on selected category -->
+  <div id="productsGrid" class="products-grid"></div>
+  <!-- Transaction receipt area (shows last sale details) -->
+  <div id="receiptArea" class="receipt-area" style="display: none;">
+    <div class="receipt-title">🧾 Transaction Receipt</div>
+    <div id="receiptContent" class="receipt-details"></div>
+  </div>
+</div>
+
+<script>
+  let products = JSON.parse(localStorage.getItem("p") || "[]");
+  let sales = JSON.parse(localStorage.getItem("s") || "[]");
+
+  // Helper: save and re-render sales page (category & products)
+  function persistAndRender() {
+    localStorage.setItem("p", JSON.stringify(products));
+    localStorage.setItem("s", JSON.stringify(sales));
+    renderSalesUI();    // update category and product grid
+    // also update any other needed UI (product dropdown in old version not needed anymore)
+  }
+
+  // Get unique categories from products
+  function getUniqueCategories() {
+    const cats = products.map(p => p.cat && p.cat.trim() !== "" ? p.cat.trim() : "General");
+    return [...new Set(cats)];
+  }
+
+  let currentCategory = "All";
+
+  // Render category buttons and product grid
+  function renderSalesUI() {
+    const categoryBar = document.getElementById("categoryBar");
+    const productsGrid = document.getElementById("productsGrid");
+    if (!categoryBar || !productsGrid) return;
+
+    const categories = getUniqueCategories();
+    const allCats = ["All", ...categories];
+    categoryBar.innerHTML = allCats.map(cat => `
+      <button class="cat-btn ${currentCategory === cat ? 'active-cat' : ''}" data-cat="${cat}">${cat}</button>
+    `).join("");
+
+    // add event listeners to category buttons
+    document.querySelectorAll(".cat-btn").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        currentCategory = btn.getAttribute("data-cat");
+        renderSalesUI();  // re-render with new category
+      });
+    });
+
+    // filter products by selected category
+    let filtered = products;
+    if (currentCategory !== "All") {
+      filtered = products.filter(p => (p.cat && p.cat.trim() === currentCategory) || (currentCategory === "General" && (!p.cat || p.cat.trim() === "")));
+    }
+
+    if (filtered.length === 0) {
+      productsGrid.innerHTML = `<div class="empty-cat">📭 No products in "${currentCategory}" category. Add products from Products page.</div>`;
+      return;
+    }
+
+    // display each product with inline sell form
+    productsGrid.innerHTML = filtered.map(product => `
+      <div class="product-sell-card" data-product-id="${product.name}">
+        <div class="product-info">
+          <strong>${escapeHtml(product.name)}</strong><br>
+          <span style="font-size:0.85rem;">📦 Stock: ${product.qty} | 💰 Cost: $${(product.buy || 0).toFixed(2)} | 💵 Expected: $${(product.exp || 0).toFixed(2)}</span>
+          ${product.qty <= 3 ? '<span class="low"> ⚠️ Low stock</span>' : '<span class="ok"> ✓</span>'}
+        </div>
+        <div class="sell-form">
+          <input type="number" id="qty-${product.name.replace(/\s/g, '')}" placeholder="Qty" min="1" max="${product.qty}" style="width:80px;">
+          <input type="number" id="price-${product.name.replace(/\s/g, '')}" placeholder="Price" step="0.01" style="width:100px;">
+          <button class="sell-btn" data-product="${product.name}">Sell</button>
+        </div>
+      </div>
+    `).join("");
+
+    // attach sell event listeners
+    filtered.forEach(product => {
+      const sellBtn = document.querySelector(`.sell-btn[data-product="${product.name}"]`);
+      if (sellBtn) {
+        sellBtn.addEventListener("click", () => {
+          const qtyInput = document.getElementById(`qty-${product.name.replace(/\s/g, '')}`);
+          const priceInput = document.getElementById(`price-${product.name.replace(/\s/g, '')}`);
+          let qty = parseInt(qtyInput?.value);
+          let price = parseFloat(priceInput?.value);
+          if (isNaN(qty) || qty <= 0) {
+            alert("⚠️ Enter valid quantity > 0");
+            return;
+          }
+          if (isNaN(price) || price < 0) {
+            alert("⚠️ Enter valid sale price");
+            return;
+          }
+          // find current product reference (might be outdated, get fresh from products array)
+          const currentProduct = products.find(p => p.name === product.name);
+          if (!currentProduct) {
+            alert("Product not found");
+            return;
+          }
+          if (currentProduct.qty < qty) {
+            alert(`❌ Insufficient stock! Only ${currentProduct.qty} left.`);
+            return;
+          }
+          // perform sale
+          const income = qty * price;
+          const costBasis = qty * currentProduct.buy;
+          const profit = income - costBasis;
+          currentProduct.qty -= qty;
+          const saleRecord = {
+            name: currentProduct.name,
+            qty: qty,
+            price: price,
+            income: income,
+            profit: profit,
+            timestamp: Date.now()
+          };
+          sales.push(saleRecord);
+          persistAndRender(); // re-render UI and update storage
+
+          // display transaction receipt
+          showReceipt(saleRecord);
+        });
+      }
+    });
+  }
+
+  // Show receipt after sale
+  function showReceipt(sale) {
+    const receiptDiv = document.getElementById("receiptArea");
+    const receiptContent = document.getElementById("receiptContent");
+    const dateStr = new Date(sale.timestamp).toLocaleString();
+    receiptContent.innerHTML = `
+      <strong>Item:</strong> ${escapeHtml(sale.name)}<br>
+      <strong>Quantity:</strong> ${sale.qty}<br>
+      <strong>Unit Price:</strong> $${sale.price.toFixed(2)}<br>
+      <strong>Total Income:</strong> $${sale.income.toFixed(2)}<br>
+      <strong>Profit:</strong> $${sale.profit.toFixed(2)}<br>
+      <strong>Time:</strong> ${dateStr}<br>
+      <hr style="border-color:#334155; margin:10px 0;">
+      ✅ Transaction completed successfully.
+    `;
+    receiptDiv.style.display = "block";
+    // auto scroll to receipt
+    receiptDiv.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    // auto hide after 8 seconds? optional, but keep visible for record
+    setTimeout(() => {
+      // flash gently but not remove, user can see
+    }, 100);
+  }
+
+  // Escape HTML
+  function escapeHtml(str) {
+    if (!str) return "";
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    });
+  }
+
+  // Add product (from Products page)
+  function addNewProduct() {
+    const name = document.getElementById("pname").value.trim();
+    const cat = document.getElementById("pcat").value.trim() || "General";
+    const qty = parseInt(document.getElementById("pqty").value);
+    const buy = parseFloat(document.getElementById("pbuy").value);
+    const exp = parseFloat(document.getElementById("pexp").value);
+
+    if (!name) { alert("❌ Product name required"); return; }
+    if (isNaN(qty) || qty < 0) { alert("⚠️ Valid quantity ≥ 0"); return; }
+    if (isNaN(buy) || buy < 0) { alert("⚠️ Valid buying price"); return; }
+    if (isNaN(exp) || exp < 0) { alert("⚠️ Valid expected price"); return; }
+
+    const exists = products.find(p => p.name.toLowerCase() === name.toLowerCase());
+    if (exists && !confirm(`"${name}" already exists. Add another with same name?`)) return;
+
+    products.push({
+      name, cat, qty, buy, exp,
+      createdAt: Date.now()
+    });
+    persistAndRender();  // this will call renderSalesUI and also update seller UI elements
+    document.getElementById("pname").value = "";
+    document.getElementById("pcat").value = "";
+    document.getElementById("pqty").value = "";
+    document.getElementById("pbuy").value = "";
+    document.getElementById("pexp").value = "";
+    alert(`✅ "${name}" added! It will appear in Sales under category: ${cat}`);
+    // If sales page is active, it automatically updates categories
+  }
+
+  // No need for old recordSale function, but keep compatibility? but we override.
+  // The new sell logic is inside the dynamic buttons.
+
+  // Page navigation
+  function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
+    const menu = document.getElementById("menuBox");
+    if (menu) menu.style.display = "none";
+    // when switching to sales page, re-render to ensure fresh data
+    if (pageId === 'sales') {
+      renderSalesUI();
+    }
+  }
+
+  function toggleMenu() {
+    const m = document.getElementById("menuBox");
+    m.style.display = (m.style.display === "block") ? "none" : "block";
+  }
+
+  window.addEventListener('click', function(e) {
+    const menuBox = document.getElementById("menuBox");
+    const menuBtn = document.querySelector(".menu");
+    if (menuBox && menuBtn && !menuBtn.contains(e.target) && !menuBox.contains(e.target)) {
+      menuBox.style.display = "none";
+    }
+  });
+
+  function uploadStoreLogo() {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+          document.getElementById("bizImg").src = ev.target.result;
+          localStorage.setItem("businessLogo", ev.target.result);
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+    input.click();
+  }
+
+  function loadSavedLogo() {
+    const savedLogo = localStorage.getItem("businessLogo");
+    if (savedLogo) document.getElementById("bizImg").src = savedLogo;
+  }
+
+  // initial render of seller UI: we don't need old product list on seller side, but we must ensure sales page is rendered after data loads
+  function fullRender() {
+    renderSalesUI(); // populate sales page with categories and products
+    // The products page no longer lists products (by instruction), but we remove productList container from products page.
+    // Actually we removed productList element from products page. So it's fine.
+  }
+
+  // Override any previous functions
+  window.showPage = showPage;
+  window.addNewProduct = addNewProduct;
+  window.toggleMenu = toggleMenu;
+  window.uploadStoreLogo = uploadStoreLogo;
+
+  // Initialize
+  loadSavedLogo();
+  fullRender();
+
+  // Ensure that when product list changes, sales UI updates (persistAndRender already does)
+  // Also expose persist for any other module
+  window.persistAndRender = persistAndRender;
+</script>
+</body>
+</html>
