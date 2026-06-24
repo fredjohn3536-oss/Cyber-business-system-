@@ -25,3 +25,17 @@ To initialize the frontend, we will use a modern bundler like **Vite**:
 - **State Management:** (e.g., Redux, Zustand, or React Context) to manage the shopping cart/POS state globally.
 - **Tailwind CSS / Material UI:** To quickly replicate and improve upon the dark-mode aesthetic from the prototype.
 - **Axios:** For making API calls to the FastAPI backend.
+
+## How to Run
+
+To start the React development server:
+
+1. Navigate to the frontend directory:
+   ```bash
+   cd frontend
+   ```
+2. Start the Vite server:
+   ```bash
+   npm run dev
+   ```
+3. Open your browser and navigate to the URL provided in the terminal (usually `http://localhost:5173`).

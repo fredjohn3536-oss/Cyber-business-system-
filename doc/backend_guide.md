@@ -45,3 +45,18 @@ To initialize the backend:
 - **`schemas.py`:** Pydantic models for data validation (what data React is allowed to send, and what it receives).
 - **`routers/`:** Separate files for API endpoints (e.g., `/api/auth`, `/api/products`, `/api/sales`).
 - **Authentication:** Implement JWT (JSON Web Tokens) to secure the API and handle the user roles defined in the database schema.
+
+## How to Run
+
+To start the FastAPI development server:
+
+1. Navigate to the backend directory and activate your virtual environment:
+   ```bash
+   cd backend
+   source venv/bin/activate  # Or venv\Scripts\activate on Windows
+   ```
+2. Run the Uvicorn server:
+   ```bash
+   uvicorn main:app --reload
+   ```
+3. Open your browser and navigate to `http://localhost:8000/docs` to view the automatic interactive API documentation (Swagger UI).
