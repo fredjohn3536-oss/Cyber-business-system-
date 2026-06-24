@@ -1,7 +1,25 @@
-import React from 'react';
+import React, { useContext, useMemo } from 'react';
+import { StoreContext } from '../context/StoreContext';
 import './Home.css';
 
 const Home = () => {
+  const { products, sales } = useContext(StoreContext);
+
+  const stats = useMemo(() => {
+    let totalRevenue = 0;
+    let totalProfit = 0;
+    let productsSold = 0;
+    
+    sales.forEach(sale => {
+      totalRevenue += sale.income;
+      totalProfit += sale.profit;
+      productsSold += sale.qty;
+    });
+
+    const lowStockCount = products.filter(p => p.qty <= 3).length;
+
+    return { totalRevenue, totalProfit, productsSold, lowStockCount };
+  }, [products, sales]);
   return (
     <div className="home-page animate-fade-in page-container">
       <header className="page-header">
@@ -15,18 +33,22 @@ const Home = () => {
       <div className="stats-grid" style={{ marginBottom: '40px' }}>
         <div className="stat-card glass-panel">
           <h3>Total Revenue</h3>
-          <h2>$24,500.00</h2>
-          <span className="trend positive">+14% vs last week</span>
+          <h2>${stats.totalRevenue.toFixed(2)}</h2>
+          <span className="trend positive">Profit: ${stats.totalProfit.toFixed(2)}</span>
         </div>
         <div className="stat-card glass-panel">
           <h3>Products Sold</h3>
-          <h2>1,245</h2>
-          <span className="trend positive">+5% vs last week</span>
+          <h2>{stats.productsSold}</h2>
+          <span className="trend positive">Across all sales</span>
         </div>
         <div className="stat-card glass-panel">
           <h3>Low Stock Items</h3>
-          <h2>8</h2>
-          <span className="trend negative">Needs attention</span>
+          <h2>{stats.lowStockCount}</h2>
+          {stats.lowStockCount > 0 ? (
+            <span className="trend negative">Needs attention</span>
+          ) : (
+            <span className="trend positive">Stock looks good</span>
+          )}
         </div>
       </div>
 
