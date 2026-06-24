@@ -5,6 +5,7 @@ import './Sales.css';
 const Sales = () => {
   const { products, processSale } = useContext(StoreContext);
   const [currentCategory, setCurrentCategory] = useState('All');
+  const [searchQuery, setSearchQuery] = useState(''); // <-- SEARCH STATE: Stores the user's search text
   const [receipt, setReceipt] = useState(null);
   
   const [sellForms, setSellForms] = useState({});
@@ -15,9 +16,22 @@ const Sales = () => {
   }, [products]);
 
   const filteredProducts = useMemo(() => {
-    if (currentCategory === 'All') return products;
-    return products.filter(p => (p.cat && p.cat.trim() === currentCategory) || (currentCategory === "General" && (!p.cat || p.cat.trim() === "")));
-  }, [products, currentCategory]);
+    let result = products;
+    
+    // Filter by Category
+    if (currentCategory !== 'All') {
+      result = result.filter(p => (p.cat && p.cat.trim() === currentCategory) || (currentCategory === "General" && (!p.cat || p.cat.trim() === "")));
+    }
+    
+    // --- SEARCH FUNCTIONALITY: Filter by Search Query ---
+    // If the user has typed anything in the search bar, filter the remaining products
+    // by checking if the product name includes the search string (case-insensitive).
+    if (searchQuery.trim() !== '') {
+      result = result.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()));
+    }
+    
+    return result;
+  }, [products, currentCategory, searchQuery]);
 
   const handleFormChange = (productName, field, value) => {
     setSellForms(prev => ({
@@ -44,7 +58,6 @@ const Sales = () => {
       handleFormChange(product.name, 'qty', '');
       handleFormChange(product.name, 'price', '');
       
-      // Auto-scroll logic could go here
       window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }
   };
@@ -53,21 +66,37 @@ const Sales = () => {
     <div className="animate-fade-in page-container">
       <h2 className="page-title">💸 Point of Sale</h2>
       
-      <div className="category-bar">
-        {categories.map(cat => (
-          <button 
-            key={cat} 
-            className={`cat-btn ${currentCategory === cat ? 'active-cat' : ''}`}
-            onClick={() => setCurrentCategory(cat)}
-          >
-            {cat}
-          </button>
-        ))}
+      <div className="sales-controls">
+        {/* SEARCH FUNCTIONALITY: Input field bound to the searchQuery state */}
+        <div className="search-bar">
+          <input 
+            type="text" 
+            placeholder="🔍 Search for a product..." 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+        
+        <div className="category-bar">
+          {categories.map(cat => (
+            <button 
+              key={cat} 
+              className={`cat-btn ${currentCategory === cat ? 'active-cat' : ''}`}
+              onClick={() => setCurrentCategory(cat)}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="products-grid">
         {filteredProducts.length === 0 ? (
-          <div className="empty-cat">📭 No products in "{currentCategory}" category. Add products from Products page.</div>
+          <div className="empty-cat">
+            {searchQuery 
+              ? `📭 No products found matching "${searchQuery}" in ${currentCategory} category.`
+              : `📭 No products in "${currentCategory}" category. Add products from Products page.`}
+          </div>
         ) : (
           filteredProducts.map(product => (
             <div key={product.name} className="product-sell-card glass-panel">
