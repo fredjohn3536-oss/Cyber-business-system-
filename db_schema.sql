@@ -12,6 +12,8 @@ USE cyber_business_system;
 -- BUSINESSES
 -- ==========================================
 
+
+
 CREATE TABLE businesses (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
 
