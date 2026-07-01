@@ -1,6 +1,6 @@
 import React, { useContext, useRef } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { Home, Package, DollarSign, Settings, LogOut, List } from 'lucide-react';
+import { Home, Package, DollarSign, Settings, LogOut, List, LayoutDashboard, Users } from 'lucide-react';
 import { StoreContext } from '../context/StoreContext';
 import { AuthContext } from '../context/AuthContext';
 import './Sidebar.css';
@@ -51,8 +51,11 @@ const Sidebar = () => {
 
         <div className="nav-divider"></div>
 
-        <NavLink to="/admin" className={({isActive}) => isActive ? "nav-item active" : "nav-item"}>
-          <Settings size={20} /><span>Admin</span>
+        <NavLink to="/admin/dashboard" className={({isActive}) => isActive ? "nav-item active" : "nav-item"}>
+          <LayoutDashboard size={20} /><span>Admin Dashboard</span>
+        </NavLink>
+        <NavLink to="/admin/management" className={({isActive}) => isActive ? "nav-item active" : "nav-item"}>
+          <Users size={20} /><span>User Management</span>
         </NavLink>
       </nav>
 

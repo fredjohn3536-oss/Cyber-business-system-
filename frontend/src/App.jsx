@@ -3,7 +3,8 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { StoreProvider } from './context/StoreContext';
 import { AuthProvider, AuthContext } from './context/AuthContext';
 import Sidebar from './components/Sidebar';
-import Home from './pages/Home';
+import Dashboard from './pages/Dashboard';
+import AdminDashboard from './pages/AdminDashboard';
 import Products from './pages/Products';
 import Sales from './pages/Sales';
 import Admin from './pages/Admin';
@@ -41,11 +42,13 @@ function App() {
             <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
             <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
 
-            <Route path="/dashboard" element={<ProtectedLayout><Home /></ProtectedLayout>} />
+            <Route path="/dashboard" element={<ProtectedLayout><Dashboard /></ProtectedLayout>} />
             <Route path="/products" element={<ProtectedLayout><Products /></ProtectedLayout>} />
             <Route path="/products/list" element={<ProtectedLayout><ProductList /></ProtectedLayout>} />
             <Route path="/sales" element={<ProtectedLayout><Sales /></ProtectedLayout>} />
-            <Route path="/admin" element={<ProtectedLayout><Admin /></ProtectedLayout>} />
+            <Route path="/admin" element={<ProtectedLayout><AdminDashboard /></ProtectedLayout>} />
+            <Route path="/admin/management" element={<ProtectedLayout><Admin /></ProtectedLayout>} />
+            <Route path="/admin/dashboard" element={<ProtectedLayout><AdminDashboard /></ProtectedLayout>} />
 
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

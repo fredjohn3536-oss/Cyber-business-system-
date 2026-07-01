@@ -207,6 +207,39 @@ class DashboardStats(BaseModel):
     active_categories: int
 
 
+class ChartDataPoint(BaseModel):
+    label: str
+    value: float
+
+class ChartSeries(BaseModel):
+    name: str
+    data: list[float]
+
+class ChartResponse(BaseModel):
+    labels: list[str]
+    series: list[ChartSeries]
+
+class RecentOrder(BaseModel):
+    id: int
+    receipt_number: str
+    total_amount: float
+    total_profit: float
+    customer: Optional[str] = None
+    items_count: int
+    sale_date: datetime
+
+class AdminDashboardStats(BaseModel):
+    total_revenue: float
+    total_profit: float
+    total_products: int
+    total_sales: int
+    products_sold: int
+    low_stock_count: int
+    active_categories: int
+    active_users: int
+    total_users: int
+    total_businesses: Optional[int] = None
+
 class AuditLogOut(BaseModel):
     id: int
     user_id: Optional[int] = None

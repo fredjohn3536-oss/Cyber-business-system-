@@ -1,5 +1,5 @@
 from sqlalchemy import (
-    Column, ForeignKey, Integer, String, Float, DateTime, Enum, Text, Boolean, DECIMAL, BigInteger
+    Column, ForeignKey, Integer, String, Float, DateTime, Enum, Text, Boolean, DECIMAL
 )
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
@@ -8,7 +8,7 @@ from database import Base
 
 class Business(Base):
     __tablename__ = "businesses"
-    id = Column(BigInteger, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True)
     business_name = Column(String(150), nullable=False)
     logo_url = Column(Text, nullable=True)
     phone = Column(String(30))
@@ -25,8 +25,8 @@ class Business(Base):
 
 class User(Base):
     __tablename__ = "users"
-    id = Column(BigInteger, primary_key=True, index=True)
-    business_id = Column(BigInteger, ForeignKey("businesses.id"), nullable=False)
+    id = Column(Integer, primary_key=True, index=True)
+    business_id = Column(Integer, ForeignKey("businesses.id"), nullable=False)
     full_name = Column(String(150), nullable=False)
     username = Column(String(100), unique=True, nullable=False)
     email = Column(String(150), unique=True)
@@ -44,8 +44,8 @@ class User(Base):
 
 class Category(Base):
     __tablename__ = "categories"
-    id = Column(BigInteger, primary_key=True, index=True)
-    business_id = Column(BigInteger, ForeignKey("businesses.id"), nullable=False)
+    id = Column(Integer, primary_key=True, index=True)
+    business_id = Column(Integer, ForeignKey("businesses.id"), nullable=False)
     name = Column(String(100), nullable=False)
     description = Column(Text, nullable=True)
     created_at = Column(DateTime, server_default=func.now())
@@ -57,9 +57,9 @@ class Category(Base):
 
 class Product(Base):
     __tablename__ = "products"
-    id = Column(BigInteger, primary_key=True, index=True)
-    business_id = Column(BigInteger, ForeignKey("businesses.id"), nullable=False)
-    category_id = Column(BigInteger, ForeignKey("categories.id"), nullable=True)
+    id = Column(Integer, primary_key=True, index=True)
+    business_id = Column(Integer, ForeignKey("businesses.id"), nullable=False)
+    category_id = Column(Integer, ForeignKey("categories.id"), nullable=True)
     product_code = Column(String(50), unique=True, nullable=True)
     barcode = Column(String(100), unique=True, nullable=True)
     product_name = Column(String(200), nullable=False)
@@ -81,9 +81,9 @@ class Product(Base):
 
 class Sale(Base):
     __tablename__ = "sales"
-    id = Column(BigInteger, primary_key=True, index=True)
-    business_id = Column(BigInteger, ForeignKey("businesses.id"), nullable=False)
-    seller_id = Column(BigInteger, ForeignKey("users.id"), nullable=False)
+    id = Column(Integer, primary_key=True, index=True)
+    business_id = Column(Integer, ForeignKey("businesses.id"), nullable=False)
+    seller_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     receipt_number = Column(String(100), unique=True, nullable=False)
     total_amount = Column(DECIMAL(15, 2), nullable=False, default=0.00)
     total_profit = Column(DECIMAL(15, 2), nullable=False, default=0.00)
@@ -100,9 +100,9 @@ class Sale(Base):
 
 class SaleItem(Base):
     __tablename__ = "sale_items"
-    id = Column(BigInteger, primary_key=True, index=True)
-    sale_id = Column(BigInteger, ForeignKey("sales.id"), nullable=False)
-    product_id = Column(BigInteger, ForeignKey("products.id"), nullable=False)
+    id = Column(Integer, primary_key=True, index=True)
+    sale_id = Column(Integer, ForeignKey("sales.id"), nullable=False)
+    product_id = Column(Integer, ForeignKey("products.id"), nullable=False)
     quantity = Column(Integer, nullable=False)
     buying_price = Column(DECIMAL(15, 2), nullable=False)
     selling_price = Column(DECIMAL(15, 2), nullable=False)
@@ -116,14 +116,14 @@ class SaleItem(Base):
 
 class StockMovement(Base):
     __tablename__ = "stock_movements"
-    id = Column(BigInteger, primary_key=True, index=True)
-    product_id = Column(BigInteger, ForeignKey("products.id"), nullable=False)
+    id = Column(Integer, primary_key=True, index=True)
+    product_id = Column(Integer, ForeignKey("products.id"), nullable=False)
     movement_type = Column(Enum('purchase', 'sale', 'return', 'adjustment', 'damaged', 'expired'), nullable=False)
     quantity = Column(Integer, nullable=False)
     previous_stock = Column(Integer, nullable=False)
     new_stock = Column(Integer, nullable=False)
     notes = Column(Text, nullable=True)
-    created_by = Column(BigInteger, ForeignKey("users.id"), nullable=True)
+    created_by = Column(Integer, ForeignKey("users.id"), nullable=True)
     created_at = Column(DateTime, server_default=func.now())
 
     product = relationship("Product", back_populates="stock_movements")
@@ -132,8 +132,8 @@ class StockMovement(Base):
 
 class Receipt(Base):
     __tablename__ = "receipts"
-    id = Column(BigInteger, primary_key=True, index=True)
-    sale_id = Column(BigInteger, ForeignKey("sales.id"), nullable=False)
+    id = Column(Integer, primary_key=True, index=True)
+    sale_id = Column(Integer, ForeignKey("sales.id"), nullable=False)
     receipt_number = Column(String(100), unique=True, nullable=False)
     pdf_url = Column(Text, nullable=True)
     printed = Column(Boolean, default=False)
@@ -145,8 +145,8 @@ class Receipt(Base):
 
 class AuditLog(Base):
     __tablename__ = "audit_logs"
-    id = Column(BigInteger, primary_key=True, index=True)
-    user_id = Column(BigInteger, ForeignKey("users.id"), nullable=True)
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
     action = Column(String(255), nullable=False)
     module = Column(String(100), nullable=False)
     description = Column(Text, nullable=True)

@@ -1,12 +1,73 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 
 from database import get_db
-from models import User, Business, AuditLog
-from schemas import UserCreate, UserOut, BusinessCreate, BusinessUpdate, BusinessOut, AuditLogOut
+from models import User, Business, AuditLog, Product, Sale, SaleItem, Category
+from schemas import UserCreate, UserOut, BusinessCreate, BusinessUpdate, BusinessOut, AuditLogOut, AdminDashboardStats, ChartResponse, ChartSeries
 from auth import hash_password, get_current_user, require_role
 
 router = APIRouter(prefix="/api/admin", tags=["Admin"])
+
+
+@router.get("/dashboard", response_model=AdminDashboardStats)
+def admin_dashboard(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_role('super_admin', 'admin')),
+):
+    biz_id = current_user.business_id
+
+    total_revenue = db.query(func.coalesce(func.sum(Sale.total_amount), 0)).filter(
+        Sale.business_id == biz_id
+    ).scalar()
+
+    total_profit = db.query(func.coalesce(func.sum(Sale.total_profit), 0)).filter(
+        Sale.business_id == biz_id
+    ).scalar()
+
+    total_products = db.query(func.count(Product.id)).filter(
+        Product.business_id == biz_id,
+        Product.status == 'active',
+    ).scalar()
+
+    total_sales = db.query(func.count(Sale.id)).filter(
+        Sale.business_id == biz_id
+    ).scalar()
+
+    products_sold = db.query(func.coalesce(func.sum(SaleItem.quantity), 0)).join(
+        Sale, SaleItem.sale_id == Sale.id
+    ).filter(Sale.business_id == biz_id).scalar()
+
+    low_stock_count = db.query(func.count(Product.id)).filter(
+        Product.business_id == biz_id,
+        Product.stock_quantity <= Product.minimum_stock,
+        Product.status == 'active',
+    ).scalar()
+
+    active_categories = db.query(func.count(Category.id)).filter(
+        Category.business_id == biz_id
+    ).scalar()
+
+    total_users = db.query(func.count(User.id)).filter(
+        User.business_id == biz_id
+    ).scalar()
+
+    active_users = db.query(func.count(User.id)).filter(
+        User.business_id == biz_id,
+        User.status == 'active',
+    ).scalar()
+
+    return AdminDashboardStats(
+        total_revenue=float(total_revenue),
+        total_profit=float(total_profit),
+        total_products=total_products,
+        total_sales=total_sales,
+        products_sold=products_sold,
+        low_stock_count=low_stock_count,
+        active_categories=active_categories,
+        active_users=active_users,
+        total_users=total_users,
+    )
 
 
 @router.get("/users", response_model=list[UserOut])

@@ -64,6 +64,9 @@ export const salesAPI = {
 // Dashboard
 export const dashboardAPI = {
   stats: () => api.get('/api/dashboard/stats'),
+  chartsMonthly: () => api.get('/api/dashboard/charts/monthly'),
+  chartsWeekly: () => api.get('/api/dashboard/charts/weekly'),
+  recentOrders: () => api.get('/api/dashboard/recent-orders'),
 };
 
 // Stock
@@ -80,4 +83,5 @@ export const adminAPI = {
   getBusiness: () => api.get('/api/admin/business'),
   updateBusiness: (data) => api.put('/api/admin/business', data),
   auditLogs: () => api.get('/api/admin/audit-logs'),
+  dashboard: () => api.get('/api/admin/dashboard'),
 };
