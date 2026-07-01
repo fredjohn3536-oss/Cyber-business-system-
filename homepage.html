@@ -340,6 +340,10 @@
 <!-- NEW SALES PAGE: Category filters + product cards + transaction receipt -->
 <div id="sales" class="page">
   <h2>💸 Point of Sale</h2>
+  <!-- Search bar -->
+  <div style="margin-bottom:16px;">
+    <input id="searchInput" type="text" placeholder="🔍 Search for a product..." oninput="renderSalesUI()" style="max-width:400px; border-radius:40px; padding:12px 18px;">
+  </div>
   <!-- Category buttons will be injected dynamically -->
   <div id="categoryBar" class="category-bar"></div>
   <!-- Products grid based on selected category -->
@@ -397,8 +401,18 @@
       filtered = products.filter(p => (p.cat && p.cat.trim() === currentCategory) || (currentCategory === "General" && (!p.cat || p.cat.trim() === "")));
     }
 
+    // filter by search query
+    const searchVal = (document.getElementById("searchInput")?.value || "").trim().toLowerCase();
+    if (searchVal) {
+      filtered = filtered.filter(p => p.name.toLowerCase().includes(searchVal));
+    }
+
     if (filtered.length === 0) {
-      productsGrid.innerHTML = `<div class="empty-cat">📭 No products in "${currentCategory}" category. Add products from Products page.</div>`;
+      const searchVal = (document.getElementById("searchInput")?.value || "").trim();
+      const msg = searchVal
+        ? `📭 No products found matching "${searchVal}" in ${currentCategory} category.`
+        : `📭 No products in "${currentCategory}" category. Add products from Products page.`;
+      productsGrid.innerHTML = `<div class="empty-cat">${msg}</div>`;
       return;
     }
 
