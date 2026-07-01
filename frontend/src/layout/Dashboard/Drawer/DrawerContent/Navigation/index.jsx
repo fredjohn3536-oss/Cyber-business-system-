@@ -21,6 +21,7 @@ export default function Navigation() {
   const { drawerOpen } = useMenu();
 
   const isLoggedIn = !!user;
+  const userRole = user?.role || 'seller';
   const matchDownLg = useMediaQuery(theme.breakpoints.down('lg'));
 
   const handleLogout = () => {
@@ -31,28 +32,28 @@ export default function Navigation() {
   const textColor = theme.palette.mode === 'dark' ? 'grey.500' : 'text.primary';
 
   const navGroups = menuItems.items
-    .filter((item) => item.type === 'group')
+    .filter((item) => item.type === 'group' && (!item.roles || item.roles.includes(userRole)))
     .map((item) => {
-      const filteredChildren = item.children?.map((child) => {
+      const filteredChildren = item.children?.filter((child) => {
+        if (!child.roles || child.roles.includes(userRole)) {
+          if (child.id === 'logout' && !isLoggedIn) return false;
+          return true;
+        }
+        return false;
+      }).map((child) => {
         if (child.children) {
           return {
             ...child,
             children: child.children.filter((sub) => {
-              if (sub.id === 'admin' && !isLoggedIn) return false;
-              if (sub.id === 'logout' && !isLoggedIn) return false;
-              if (sub.id === 'login' && isLoggedIn) return false;
-              if (sub.id === 'register' && isLoggedIn) return false;
-              return true;
+              if (!sub.roles || sub.roles.includes(userRole)) {
+                if (sub.id === 'logout' && !isLoggedIn) return false;
+                return true;
+              }
+              return false;
             })
           };
         }
         return child;
-      }).filter((child) => {
-        if (child.id === 'admin' && !isLoggedIn) return false;
-        if (child.id === 'logout' && !isLoggedIn) return false;
-        if (child.id === 'login' && isLoggedIn) return false;
-        if (child.id === 'register' && isLoggedIn) return false;
-        return true;
       });
 
       if (filteredChildren && filteredChildren.length === 0) return null;
@@ -82,6 +83,16 @@ export default function Navigation() {
               });
             }
             if (child.type === 'item') {
+              if (child.id === 'logout') {
+                return (
+                  <ListItemButton key="logout" onClick={handleLogout} sx={{ pl: 2.5, py: 1, mb: 0.5, justifyContent: drawerOpen ? 'flex-start' : 'center' }}>
+                    <ListItemIcon sx={{ color: textColor, minWidth: drawerOpen ? 28 : 0, justifyContent: 'center' }}>
+                      <LogoutOutlined style={{ fontSize: '1.15rem' }} />
+                    </ListItemIcon>
+                    {drawerOpen && <ListItemText primary={<Typography variant="h6" sx={{ color: textColor }}>Logout</Typography>} />}
+                  </ListItemButton>
+                );
+              }
               return <NavItem key={child.id} item={child} level={1} matchDownLg={matchDownLg} navigate={navigate} location={location} matchPath={matchPath} drawerOpen={drawerOpen} />;
             }
             if (child.type === 'collapse') {

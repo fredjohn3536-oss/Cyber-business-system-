@@ -34,7 +34,10 @@ export default function NavItem({ item, level, matchDownLg, navigate, location, 
         py: 1,
         mb: 0.5,
         justifyContent: drawerOpen ? 'flex-start' : 'center',
-        '&.Mui-selected': { bgcolor: 'primary.lighter', '&:hover': { bgcolor: 'primary.lighter' } },
+        '&.Mui-selected': {
+          bgcolor: theme.palette.mode === 'dark' ? 'primary.dark' : 'primary.lighter',
+          '&:hover': { bgcolor: theme.palette.mode === 'dark' ? 'primary.dark' : 'primary.lighter' }
+        },
         '&:hover': { bgcolor: theme.palette.mode === 'dark' ? 'divider' : 'primary.lighter' }
       }}
     >

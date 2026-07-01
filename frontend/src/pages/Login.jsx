@@ -21,8 +21,9 @@ export default function Login() {
     setError('');
     setLoading(true);
     try {
-      await login(form.username, form.password);
-      navigate('/dashboard');
+      const userData = await login(form.username, form.password);
+      const role = userData?.role || 'seller';
+      navigate(role === 'seller' || role === 'manager' ? '/seller-dashboard' : '/admin');
     } catch (err) {
       setError(err.response?.data?.detail || 'Login failed');
     } finally {
