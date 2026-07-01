@@ -20,8 +20,8 @@ export default function NavItem({ item, level, matchDownLg, navigate, location, 
     if (item?.url) navigate(item.url);
   };
 
-  const textColor = theme.palette.mode === 'dark' ? 'grey.400' : 'text.primary';
-  const iconSelectedColor = theme.palette.mode === 'dark' ? 'text.primary' : 'primary.main';
+  const textColor = theme.palette.mode === 'dark' ? 'grey.500' : 'text.primary';
+  const iconSelectedColor = theme.palette.mode === 'dark' ? 'warning.light' : 'primary.main';
 
   return (
     <ListItemButton

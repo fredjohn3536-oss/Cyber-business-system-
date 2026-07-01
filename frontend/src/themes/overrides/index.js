@@ -16,8 +16,25 @@ const Chip = () => ({
   MuiChip: { styleOverrides: { root: { borderRadius: 8 } } }
 });
 
+const Paper = () => ({
+  MuiPaper: {
+    styleOverrides: {
+      root: {
+        transition: 'background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease'
+      }
+    }
+  }
+});
+
 const Drawer = () => ({
-  MuiDrawer: { styleOverrides: { paper: { border: 'none' } } }
+  MuiDrawer: {
+    styleOverrides: {
+      paper: {
+        border: 'none',
+        transition: 'background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease'
+      }
+    }
+  }
 });
 
 const IconButton = (theme) => ({
@@ -98,6 +115,7 @@ export default function ComponentsOverrides(theme) {
     ListItemButton(),
     ListItemIcon(),
     OutlinedInput(),
+    Paper(),
     Tab(theme),
     TableCell(),
     TableRow(),

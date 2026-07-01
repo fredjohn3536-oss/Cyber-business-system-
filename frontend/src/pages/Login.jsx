@@ -1,9 +1,15 @@
-import React, { useState, useContext } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import './Login.css';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Alert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
 
-const Login = () => {
+export default function Login() {
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
   const [form, setForm] = useState({ username: '', password: '' });
@@ -25,51 +31,34 @@ const Login = () => {
   };
 
   return (
-    <div className="login-page">
-      <div className="login-card glass-panel">
-        <div className="login-header">
-          <div className="login-logo">⚡</div>
-          <h1>Cyber Business System</h1>
-          <p>Sign in to your account</p>
-        </div>
+    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', bgcolor: 'background.default', p: 2.5 }}>
+      <Card sx={{ maxWidth: 420, width: '100%', p: 4 }}>
+        <Stack sx={{ textAlign: 'center', mb: 4 }}>
+          <Typography variant="h3" sx={{ mb: 0.5 }}>Cyber Business System</Typography>
+          <Typography variant="body2" color="text.secondary">Sign in to your account</Typography>
+        </Stack>
 
-        <form onSubmit={handleSubmit}>
-          {error && <div className="login-error">{error}</div>}
+        <Box component="form" onSubmit={handleSubmit}>
+          {error && <Alert severity="error" sx={{ mb: 2.5 }}>{error}</Alert>}
 
-          <div className="input-group">
-            <label>Username</label>
-            <input
-              type="text"
-              placeholder="Enter your username"
-              value={form.username}
-              onChange={(e) => setForm({ ...form, username: e.target.value })}
-              required
-              autoFocus
-            />
-          </div>
+          <TextField fullWidth size="small" label="Username" value={form.username}
+            onChange={(e) => setForm({ ...form, username: e.target.value })}
+            required autoFocus sx={{ mb: 2 }} />
 
-          <div className="input-group">
-            <label>Password</label>
-            <input
-              type="password"
-              placeholder="Enter your password"
-              value={form.password}
-              onChange={(e) => setForm({ ...form, password: e.target.value })}
-              required
-            />
-          </div>
+          <TextField fullWidth size="small" type="password" label="Password" value={form.password}
+            onChange={(e) => setForm({ ...form, password: e.target.value })}
+            required sx={{ mb: 3 }} />
 
-          <button type="submit" className="btn-primary w-full" disabled={loading}>
+          <Button type="submit" fullWidth variant="contained" size="large" disabled={loading}>
             {loading ? 'Signing in...' : 'Sign In'}
-          </button>
-        </form>
+          </Button>
+        </Box>
 
-        <p className="auth-switch">
-          Don't have an account? <Link to="/register">Sign up</Link>
-        </p>
-      </div>
-    </div>
+        <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', mt: 3 }}>
+          Don't have an account?{' '}
+          <Link to="/register" style={{ color: 'inherit', fontWeight: 600 }}>Sign up</Link>
+        </Typography>
+      </Card>
+    </Box>
   );
-};
-
-export default Login;
+}

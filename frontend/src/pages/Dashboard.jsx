@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useMemo } from 'react';
+import { useState, useEffect, useContext, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { StoreContext } from '../context/StoreContext';
 import { AuthContext } from '../context/AuthContext';
@@ -16,234 +16,20 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import AvatarGroup from '@mui/material/AvatarGroup';
-import Link from '@mui/material/Link';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import TextField from '@mui/material/TextField';
-import MenuItem from '@mui/material/MenuItem';
-import Divider from '@mui/material/Divider';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import { useTheme, alpha } from '@mui/material/styles';
-import { LineChart, BarChart } from '@mui/x-charts';
-import { chartsGridClasses } from '@mui/x-charts';
 
-import RiseOutlined from '@ant-design/icons/RiseOutlined';
-import FallOutlined from '@ant-design/icons/FallOutlined';
 import GiftOutlined from '@ant-design/icons/GiftOutlined';
 import ShoppingCartOutlined from '@ant-design/icons/ShoppingCartOutlined';
 import DollarOutlined from '@ant-design/icons/DollarOutlined';
-import BoxPlotOutlined from '@ant-design/icons/BoxPlotOutlined';
-import TeamOutlined from '@ant-design/icons/TeamOutlined';
-import WarningOutlined from '@ant-design/icons/WarningOutlined';
 
-import StatCard from '../components/StatCard';
+import AnalyticEcommerce from '../components/cards/statistics/AnalyticEcommerce';
 import MainCard from '../components/MainCard';
 
-function OrdersTable({ orders }) {
-  const theme = useTheme();
-  return (
-    <TableContainer sx={{ width: '100%', overflowX: 'auto', display: 'block', maxWidth: '100%', '& td, & th': { whiteSpace: 'nowrap' } }}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Order ID</TableCell>
-            <TableCell>Items</TableCell>
-            <TableCell align="right">Amount</TableCell>
-            <TableCell align="right">Profit</TableCell>
-            <TableCell>Date</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {orders.length === 0 ? (
-            <TableRow><TableCell colSpan={5} align="center" sx={{ py: 4, color: 'text.secondary' }}>No orders yet</TableCell></TableRow>
-          ) : orders.map((row) => (
-            <TableRow key={row.id} hover sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-              <TableCell><Link color="secondary" underline="hover">{row.receipt_number}</Link></TableCell>
-              <TableCell>{row.items_count} items</TableCell>
-              <TableCell align="right">TSh {parseFloat(row.total_amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}</TableCell>
-              <TableCell align="right" sx={{ color: row.total_profit >= 0 ? 'success.main' : 'error.main' }}>
-                TSh {parseFloat(row.total_profit).toLocaleString('en-US', { minimumFractionDigits: 2 })}
-              </TableCell>
-              <TableCell>{new Date(row.sale_date).toLocaleDateString()}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  );
-}
-
-function IncomeAreaChart({ monthlyData, weeklyData }) {
-  const theme = useTheme();
-  const [view, setView] = useState('monthly');
-  const [visibility, setVisibility] = useState({ Income: true, Profit: true });
-
-  const monthlyLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  const weeklyLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-
-  const labels = view === 'monthly' ? monthlyLabels : weeklyLabels;
-  const data = view === 'monthly' ? monthlyData : weeklyData;
-  const incomeData = data?.series?.[0]?.data || [];
-  const profitData = data?.series?.[1]?.data || [];
-
-  const axisFonstyle = { fontSize: 10, fill: theme.palette.text.secondary };
-  const line = theme.palette.divider;
-
-  const visibleSeries = [
-    { data: incomeData, label: 'Income', showMark: false, area: true, id: 'Income', color: theme.palette.primary.main, visible: visibility.Income },
-    { data: profitData, label: 'Profit', showMark: false, area: true, id: 'Profit', color: theme.palette.success.main, visible: visibility.Profit },
-  ];
-
-  return (
-    <MainCard contentSX={{ p: 0 }}>
-      <Box sx={{ px: 2.5, pt: 2.5 }}>
-        <Grid container alignItems="center" justifyContent="space-between">
-          <Grid><Typography variant="subtitle1">Unique Visitor</Typography></Grid>
-          <Grid>
-            <Stack direction="row" spacing={1}>
-              <Button size="small" onClick={() => setView('monthly')} color={view === 'monthly' ? 'primary' : 'secondary'} variant={view === 'monthly' ? 'outlined' : 'text'} sx={{ minWidth: 60 }}>Month</Button>
-              <Button size="small" onClick={() => setView('weekly')} color={view === 'weekly' ? 'primary' : 'secondary'} variant={view === 'weekly' ? 'outlined' : 'text'} sx={{ minWidth: 60 }}>Week</Button>
-            </Stack>
-          </Grid>
-        </Grid>
-      </Box>
-      <Box sx={{ pt: 1, pr: 2 }}>
-        <LineChart
-          grid={{ horizontal: true }}
-          xAxis={[{ scaleType: 'point', data: labels, disableLine: true, tickLabelStyle: axisFonstyle }]}
-          yAxis={[{ disableLine: true, disableTicks: true, tickLabelStyle: axisFonstyle }]}
-          height={450}
-          margin={{ top: 40, bottom: 20, right: 20 }}
-          series={visibleSeries.filter(s => s.visible).map(s => ({
-            type: 'line', data: s.data, label: s.label, showMark: s.showMark, area: s.area, id: s.id,
-            color: s.color, stroke: s.color, strokeWidth: 2,
-          }))}
-          slotProps={{ legend: { hidden: true } }}
-          sx={{
-            '& .MuiAreaElement-series-Income': { fill: `url('#gradInc')`, strokeWidth: 2, opacity: 0.8 },
-            '& .MuiAreaElement-series-Profit': { fill: `url('#gradProf')`, strokeWidth: 2, opacity: 0.8 },
-            '& .MuiChartsAxis-directionX .MuiChartsAxis-tick': { stroke: line },
-          }}
-        >
-          <defs>
-            <linearGradient id="gradInc" gradientTransform="rotate(90)">
-              <stop offset="10%" stopColor={alpha(theme.palette.primary.main, 0.4)} />
-              <stop offset="90%" stopColor={alpha(theme.palette.background.default, 0.4)} />
-            </linearGradient>
-            <linearGradient id="gradProf" gradientTransform="rotate(90)">
-              <stop offset="10%" stopColor={alpha(theme.palette.success.main, 0.4)} />
-              <stop offset="90%" stopColor={alpha(theme.palette.background.default, 0.4)} />
-            </linearGradient>
-          </defs>
-        </LineChart>
-      </Box>
-      <Stack direction="row" sx={{ gap: 2, alignItems: 'center', justifyContent: 'center', pb: 2 }}>
-        {visibleSeries.map(item => (
-          <Stack key={item.label} direction="row" sx={{ gap: 1.25, alignItems: 'center', cursor: 'pointer' }}
-            onClick={() => setVisibility(v => ({ ...v, [item.label]: !v[item.label] }))}>
-            <Box sx={{ width: 12, height: 12, bgcolor: item.visible ? item.color : 'grey.500', borderRadius: '50%' }} />
-            <Typography variant="body2" color="text.primary">{item.label}</Typography>
-          </Stack>
-        ))}
-      </Stack>
-    </MainCard>
-  );
-}
-
-function MonthlyBarChart({ weeklyData }) {
-  const theme = useTheme();
-  const labels = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
-  const data = weeklyData?.series?.[0]?.data || [0, 0, 0, 0, 0, 0, 0];
-  const axisFonstyle = { fontSize: 10, fill: theme.palette.text.secondary };
-
-  return (
-    <BarChart
-      height={380}
-      series={[{ data, label: 'Income' }]}
-      xAxis={[{ data: labels, scaleType: 'band', disableLine: true, disableTicks: true, tickLabelStyle: axisFonstyle }]}
-      leftAxis={null}
-      slotProps={{ legend: { hidden: true }, bar: { rx: 5, ry: 5 } }}
-      axisHighlight={{ x: 'none' }}
-      margin={{ left: 20, right: 20 }}
-      colors={[theme.palette.info.light]}
-      sx={{ '& .MuiBarElement-root:hover': { opacity: 0.6 } }}
-    />
-  );
-}
-
-function ReportAreaChart({ data: chartData }) {
-  const theme = useTheme();
-  const data = chartData?.series?.[1]?.data?.slice(0, 7) || [58, 115, 28, 83, 63, 75, 35];
-  const labels = chartData?.labels?.slice(0, 7) || ['Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  const axisFonstyle = { fill: theme.palette.text.secondary };
-
-  return (
-    <LineChart
-      grid={{ horizontal: true }}
-      xAxis={[{ data: labels, scaleType: 'point', disableLine: true, disableTicks: true, tickLabelStyle: axisFonstyle }]}
-      yAxis={[{ tickMaxStep: 10 }]}
-      leftAxis={null}
-      series={[{ data, showMark: false, id: 'ReportAreaChart', color: theme.palette.warning.main }]}
-      slotProps={{ legend: { hidden: true } }}
-      height={340}
-      margin={{ top: 30, bottom: 50, left: 20, right: 20 }}
-      sx={{ '& .MuiLineElement-root': { strokeWidth: 1 }, [`& .${chartsGridClasses.line}`]: { strokeDasharray: '5 3' } }}
-    />
-  );
-}
-
-function SalesChart({ monthlyData }) {
-  const theme = useTheme();
-  const [showIncome, setShowIncome] = useState(true);
-  const [showCost, setShowCost] = useState(true);
-
-  const labels = monthlyData?.labels || ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  const incomeData = monthlyData?.series?.[0]?.data || [];
-  const profitData = monthlyData?.series?.[1]?.data || [];
-  const primaryColor = theme.palette.primary.main;
-  const warningColor = theme.palette.warning.main;
-  const axisFonstyle = { fontSize: 10, fill: theme.palette.text.secondary };
-
-  const totalIncome = incomeData.reduce((a, b) => a + b, 0);
-  const totalProfit = profitData.reduce((a, b) => a + b, 0);
-
-  const chartSeries = [
-    { data: incomeData, label: 'Income', color: warningColor, visible: showIncome },
-    { data: profitData, label: 'Profit', color: primaryColor, visible: showCost },
-  ];
-
-  return (
-    <Box sx={{ p: 2.5, pb: 0 }}>
-      <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 1 }}>
-        <Box>
-          <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>Net Profit</Typography>
-          <Typography variant="h4">TSh {totalProfit.toLocaleString('en-US', { minimumFractionDigits: 2 })}</Typography>
-        </Box>
-        <Stack direction="row">
-          <FormControlLabel control={<Checkbox checked={showIncome} onChange={() => setShowIncome(!showIncome)} sx={{ '&.Mui-checked': { color: warningColor } }} />} label="Income" />
-          <FormControlLabel control={<Checkbox checked={showCost} onChange={() => setShowCost(!showCost)} sx={{ '&.Mui-checked': { color: primaryColor } }} />} label="Profit" />
-        </Stack>
-      </Stack>
-      <BarChart
-        height={380}
-        grid={{ horizontal: true }}
-        xAxis={[{ data: labels, scaleType: 'band', tickLabelStyle: { ...axisFonstyle, fontSize: 12 } }]}
-        yAxis={[{ disableLine: true, disableTicks: true, tickMaxStep: 20, tickLabelStyle: axisFonstyle }]}
-        series={chartSeries.filter(s => s.visible).map(s => ({ data: s.data, label: s.label, color: s.color, type: 'bar' }))}
-        slotProps={{ legend: { hidden: true }, bar: { rx: 5, ry: 5 } }}
-        axisHighlight={{ x: 'none' }}
-        margin={{ top: 30, left: 40, right: 10 }}
-        tooltip={{ trigger: 'item' }}
-        sx={{ '& .MuiBarElement-root:hover': { opacity: 0.6 }, '& .MuiChartsAxis-directionX .MuiChartsAxis-tick, & .MuiChartsAxis-root line': { stroke: theme.palette.divider } }}
-      />
-    </Box>
-  );
-}
+import IncomeAreaChart from '../sections/dashboard/default/IncomeAreaChart';
+import MonthlyBarChart from '../sections/dashboard/default/MonthlyBarChart';
+import ReportAreaChart from '../sections/dashboard/default/ReportAreaChart';
+import SalesChart from '../sections/dashboard/default/SalesChart';
+import OrdersTable from '../sections/dashboard/default/OrdersTable';
 
 export default function Dashboard() {
   const { products, sales } = useContext(StoreContext);
@@ -312,19 +98,24 @@ export default function Dashboard() {
       </Grid>
 
       <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-        <StatCard title="Total Revenue" count={`TSh ${Number(totalRevenue).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
-          percentage={totalRevenue > 0 ? 59.3 : 0} extra={`TSh ${Number(totalProfit).toFixed(2)} total profit`} icon={<DollarOutlined />} />
+        <AnalyticEcommerce title="Total Revenue"
+          count={`TSh ${Number(totalRevenue).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+          percentage={totalRevenue > 0 ? 59.3 : 0}
+          extra={`TSh ${Number(totalProfit).toFixed(2)} total profit`} />
       </Grid>
       <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-        <StatCard title="Products" count={String(totalProducts)} percentage={70.5} extra={`${productsSold} items sold total`} icon={<BoxPlotOutlined />} />
+        <AnalyticEcommerce title="Products" count={String(totalProducts)}
+          percentage={70.5} extra={`${productsSold} items sold total`} />
       </Grid>
       <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-        <StatCard title="Total Orders" count={String(totalSales)} percentage={27.4} isLoss color="warning" extra={`${productsSold} products ordered`} icon={<ShoppingCartOutlined />} />
+        <AnalyticEcommerce title="Total Orders" count={String(totalSales)}
+          percentage={27.4} isLoss color="warning" extra={`${productsSold} products ordered`} />
       </Grid>
       <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-        <StatCard title="Low Stock Items" count={String(lowStockCount)}
-          percentage={lowStockCount > 0 ? 12.6 : 0} isLoss={lowStockCount > 0} color={lowStockCount > 0 ? 'error' : 'success'}
-          extra={lowStockCount > 0 ? 'Needs restocking' : 'Stock looks good'} icon={<WarningOutlined />} />
+        <AnalyticEcommerce title="Low Stock Items" count={String(lowStockCount)}
+          percentage={lowStockCount > 0 ? 12.6 : 0} isLoss={lowStockCount > 0}
+          color={lowStockCount > 0 ? 'error' : 'success'}
+          extra={lowStockCount > 0 ? 'Needs restocking' : 'Stock looks good'} />
       </Grid>
 
       <Grid sx={{ display: { sm: 'none', md: 'block', lg: 'none' } }} size={{ md: 8 }} />

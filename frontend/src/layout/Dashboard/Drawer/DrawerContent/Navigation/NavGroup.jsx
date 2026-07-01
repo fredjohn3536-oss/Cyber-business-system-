@@ -24,7 +24,7 @@ export default function NavGroup({ item, level, matchDownLg, navigate, location,
     return null;
   });
 
-  const textColor = theme.palette.mode === 'dark' ? 'grey.400' : 'text.primary';
+  const textColor = theme.palette.mode === 'dark' ? 'grey.500' : 'text.primary';
 
   return (
     <>

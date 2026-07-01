@@ -19,13 +19,10 @@ export default function DrawerContent() {
       </Box>
       {drawerOpen && (
         <Box sx={{ p: 2, borderTop: '1px solid', borderColor: 'divider' }}>
-          <Stack direction="row" sx={{ alignItems: 'center', gap: 1.5, px: 1 }}>
+          <Stack direction="row" sx={{ justifyContent: 'center' }}>
             <IconButton onClick={toggleTheme} size="small" sx={{ color: 'text.secondary' }}>
               {mode === 'dark' ? <SunOutlined /> : <MoonOutlined />}
             </IconButton>
-            <Box sx={{ fontSize: '0.875rem', color: 'text.secondary', fontWeight: 500 }}>
-              {mode === 'dark' ? 'Light Mode' : 'Dark Mode'}
-            </Box>
           </Stack>
         </Box>
       )}

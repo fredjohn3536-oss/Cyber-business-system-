@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useMemo } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { StoreContext } from '../context/StoreContext';
 import { adminAPI, stockAPI } from '../services/api';
 import { AuthContext } from '../context/AuthContext';
@@ -15,26 +15,16 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Chip from '@mui/material/Chip';
-import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import { useTheme } from '@mui/material/styles';
-import { LineChart, BarChart } from '@mui/x-charts';
-import { chartsGridClasses } from '@mui/x-charts';
+import { BarChart } from '@mui/x-charts';
 
-import RiseOutlined from '@ant-design/icons/RiseOutlined';
-import FallOutlined from '@ant-design/icons/FallOutlined';
-import DollarOutlined from '@ant-design/icons/DollarOutlined';
-import TeamOutlined from '@ant-design/icons/TeamOutlined';
-import ShoppingCartOutlined from '@ant-design/icons/ShoppingCartOutlined';
-import WarningOutlined from '@ant-design/icons/WarningOutlined';
-import BoxPlotOutlined from '@ant-design/icons/BoxPlotOutlined';
 import ReloadOutlined from '@ant-design/icons/ReloadOutlined';
 
-import StatCard from '../components/StatCard';
+import AnalyticEcommerce from '../components/cards/statistics/AnalyticEcommerce';
 import MainCard from '../components/MainCard';
 
 export default function AdminDashboard() {
@@ -105,21 +95,26 @@ export default function AdminDashboard() {
       </Grid>
 
       <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-        <StatCard title="Total Revenue" count={`TSh ${Number(stats.total_revenue || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}`}
-          percentage={stats.total_revenue > 0 ? 15.2 : 0} extra={`TSh ${Number(stats.total_profit || 0).toFixed(2)} total profit`} icon={<DollarOutlined />} />
+        <AnalyticEcommerce title="Total Revenue"
+          count={`TSh ${Number(stats.total_revenue || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}`}
+          percentage={stats.total_revenue > 0 ? 15.2 : 0}
+          extra={`TSh ${Number(stats.total_profit || 0).toFixed(2)} total profit`} />
       </Grid>
       <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-        <StatCard title="Active Users" count={String(stats.active_users || 0)} percentage={stats.total_users > 0 ? Math.round((stats.active_users / stats.total_users) * 100) : 0}
-          extra={`${stats.total_users || 0} total team members`} icon={<TeamOutlined />} color="info" />
+        <AnalyticEcommerce title="Active Users" count={String(stats.active_users || 0)}
+          percentage={stats.total_users > 0 ? Math.round((stats.active_users / stats.total_users) * 100) : 0}
+          extra={`${stats.total_users || 0} total team members`} color="info" />
       </Grid>
       <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-        <StatCard title="Total Orders" count={String(stats.total_sales || 0)} percentage={27.4} isLoss color="warning"
-          extra={`${stats.products_sold || 0} items sold`} icon={<ShoppingCartOutlined />} />
+        <AnalyticEcommerce title="Total Orders" count={String(stats.total_sales || 0)}
+          percentage={27.4} isLoss color="warning"
+          extra={`${stats.products_sold || 0} items sold`} />
       </Grid>
       <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-        <StatCard title="Low Stock" count={String(stats.low_stock_count || 0)}
-          percentage={stats.low_stock_count > 0 ? 8.3 : 0} isLoss={stats.low_stock_count > 0} color={stats.low_stock_count > 0 ? 'error' : 'success'}
-          extra={`${stats.active_categories || 0} active categories`} icon={<WarningOutlined />} />
+        <AnalyticEcommerce title="Low Stock" count={String(stats.low_stock_count || 0)}
+          percentage={stats.low_stock_count > 0 ? 8.3 : 0} isLoss={stats.low_stock_count > 0}
+          color={stats.low_stock_count > 0 ? 'error' : 'success'}
+          extra={`${stats.active_categories || 0} active categories`} />
       </Grid>
 
       <Grid size={{ xs: 12, md: 8 }}>

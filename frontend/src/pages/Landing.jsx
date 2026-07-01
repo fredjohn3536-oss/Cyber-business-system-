@@ -1,99 +1,127 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Landing.css';
+import { useTheme } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
+import Stack from '@mui/material/Stack';
+import Chip from '@mui/material/Chip';
 
-const Landing = () => {
+const features = [
+  { icon: '\uD83D\uDCE6', title: 'Inventory Management', desc: 'Add products with categories, track stock levels, and get low-stock alerts before you run out.' },
+  { icon: '\uD83D\uDCB8', title: 'Point of Sale', desc: 'Quick and easy sales processing with category filtering, search, and real-time profit calculation.' },
+  { icon: '\uD83D\uDCCA', title: 'Dashboard Analytics', desc: 'View total revenue, profit margins, sales history, and stock insights at a glance.' },
+  { icon: '\uD83E\uDDFE', title: 'Transaction Receipts', desc: 'Automatic receipt generation for every sale with item details, pricing, and profit breakdown.' },
+  { icon: '\uD83D\uDC65', title: 'Multi-User Support', desc: 'Role-based access for owners, managers, and sellers with full audit trail logging.' },
+  { icon: '\uD83D\uDD10', title: 'Secure & Reliable', desc: 'JWT authentication, encrypted passwords, and a robust database schema for data integrity.' },
+];
+
+export default function Landing() {
+  const theme = useTheme();
   const navigate = useNavigate();
 
   return (
-    <div className="landing-page">
-      <nav className="landing-nav">
-        <div className="landing-logo">⚡ Cyber Business System</div>
-        <div className="landing-nav-buttons">
-          <button className="landing-btn-ghost" onClick={() => navigate('/login')}>Sign In</button>
-          <button className="landing-btn-primary" onClick={() => navigate('/login')}>Get Started</button>
-        </div>
-      </nav>
+    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', color: 'text.primary' }}>
+      <Container maxWidth="lg">
+        <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', py: 2.5 }}>
+          <Typography variant="h5" sx={{
+            fontWeight: 700,
+            background: theme.palette.mode === 'dark'
+              ? 'linear-gradient(135deg, #e8e8f0, #8a8aa0)'
+              : 'linear-gradient(135deg, #1a1a2e, #6b7280)',
+            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+          }}>
+            Cyber Business System
+          </Typography>
+          <Stack direction="row" sx={{ gap: 1.5 }}>
+            <Button variant="outlined" sx={{ borderRadius: 30 }} onClick={() => navigate('/login')}>Sign In</Button>
+            <Button variant="contained" sx={{ borderRadius: 30, px: 3 }} onClick={() => navigate('/login')}>Get Started</Button>
+          </Stack>
+        </Stack>
+      </Container>
 
-      <section className="landing-hero">
-        <div className="hero-content">
-          <span className="hero-badge">🚀 Point of Sale & Inventory Management</span>
-          <h1 className="hero-title">Run Your Business <span className="hero-highlight">Smarter</span></h1>
-          <p className="hero-subtitle">
-            A lightweight, intuitive POS and inventory management system designed for small businesses
-            and independent sellers. Track sales, manage stock, and grow your revenue.
-          </p>
-          <div className="hero-actions">
-            <button className="landing-btn-primary hero-cta" onClick={() => navigate('/login')}>
-              Start Selling Now →
-            </button>
-            <button className="landing-btn-ghost hero-ghost" onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}>
-              Learn More
-            </button>
-          </div>
-        </div>
-        <div className="hero-visual">
-          <div className="hero-card">
-            <div className="hero-card-header">💰 Today's Sales</div>
-            <div className="hero-card-body">
-              <div className="hero-stat"><span className="hero-stat-value">TSh 1,247</span><span className="hero-stat-label">Revenue</span></div>
-              <div className="hero-stat"><span className="hero-stat-value">TSh 342</span><span className="hero-stat-label">Profit</span></div>
-              <div className="hero-stat"><span className="hero-stat-value">23</span><span className="hero-stat-label">Items Sold</span></div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <Container maxWidth="lg" sx={{ mt: 6 }}>
+        <Grid container alignItems="center" spacing={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
+            <Chip label="Point of Sale & Inventory Management" color="primary" size="small" sx={{ mb: 3, borderRadius: 30 }} />
+            <Typography variant="h2" sx={{ fontWeight: 800, lineHeight: 1.15, letterSpacing: '-0.03em', mb: 2.5, fontSize: { xs: '2.2rem', md: '3.2rem' } }}>
+              Run Your Business{' '}
+              <Box component="span" sx={{
+                background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)',
+                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+              }}>Smarter</Box>
+            </Typography>
+            <Typography variant="body1" color="text.secondary" sx={{ fontSize: '1.15rem', lineHeight: 1.7, mb: 4 }}>
+              A lightweight, intuitive POS and inventory management system designed for small businesses and independent sellers. Track sales, manage stock, and grow your revenue.
+            </Typography>
+            <Stack direction="row" sx={{ gap: 2, alignItems: 'center' }}>
+              <Button variant="contained" size="large" sx={{ borderRadius: 30, px: 4 }} onClick={() => navigate('/login')}>
+                Start Selling Now →
+              </Button>
+              <Button variant="outlined" size="large" sx={{ borderRadius: 30, px: 4 }} onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}>
+                Learn More
+              </Button>
+            </Stack>
+          </Grid>
+          <Grid size={{ xs: 12, md: 6 }} sx={{ display: { xs: 'none', md: 'flex' }, justifyContent: 'center' }}>
+            <Box sx={{
+              bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider',
+              borderRadius: 6, p: 3.5, width: 320, boxShadow: theme.shadows[8],
+            }}>
+              <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 2.5 }}>Today's Sales</Typography>
+              <Stack sx={{ gap: 2 }}>
+                {[{ label: 'Revenue', value: 'TSh 1,247', color: 'success.main' },
+                  { label: 'Profit', value: 'TSh 342', color: 'success.main' },
+                  { label: 'Items Sold', value: '23', color: 'success.main' },
+                ].map(s => (
+                  <Stack key={s.label} direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', bgcolor: 'action.hover', borderRadius: 2, px: 2, py: 1.5 }}>
+                    <Typography variant="body2" color="text.secondary">{s.label}</Typography>
+                    <Typography variant="subtitle2" color={s.color}>{s.value}</Typography>
+                  </Stack>
+                ))}
+              </Stack>
+            </Box>
+          </Grid>
+        </Grid>
+      </Container>
 
-      <section id="features" className="landing-features">
-        <h2 className="section-title">Everything You Need</h2>
-        <p className="section-subtitle">Powerful features to manage your business efficiently</p>
-        <div className="features-grid">
-          <div className="feature-card">
-            <div className="feature-icon">📦</div>
-            <h3>Inventory Management</h3>
-            <p>Add products with categories, track stock levels, and get low-stock alerts before you run out.</p>
-          </div>
-          <div className="feature-card">
-            <div className="feature-icon">💸</div>
-            <h3>Point of Sale</h3>
-            <p>Quick and easy sales processing with category filtering, search, and real-time profit calculation.</p>
-          </div>
-          <div className="feature-card">
-            <div className="feature-icon">📊</div>
-            <h3>Dashboard Analytics</h3>
-            <p>View total revenue, profit margins, sales history, and stock insights at a glance.</p>
-          </div>
-          <div className="feature-card">
-            <div className="feature-icon">🧾</div>
-            <h3>Transaction Receipts</h3>
-            <p>Automatic receipt generation for every sale with item details, pricing, and profit breakdown.</p>
-          </div>
-          <div className="feature-card">
-            <div className="feature-icon">👥</div>
-            <h3>Multi-User Support</h3>
-            <p>Role-based access for owners, managers, and sellers with full audit trail logging.</p>
-          </div>
-          <div className="feature-card">
-            <div className="feature-icon">🔐</div>
-            <h3>Secure & Reliable</h3>
-            <p>JWT authentication, encrypted passwords, and a robust database schema for data integrity.</p>
-          </div>
-        </div>
-      </section>
+      <Container maxWidth="lg" id="features" sx={{ mt: 12, mb: 12, textAlign: 'center' }}>
+        <Typography variant="h3" sx={{ fontWeight: 700, mb: 1.5 }}>Everything You Need</Typography>
+        <Typography variant="body1" color="text.secondary" sx={{ mb: 6, fontSize: '1.1rem' }}>
+          Powerful features to manage your business efficiently
+        </Typography>
+        <Grid container spacing={3}>
+          {features.map(f => (
+            <Grid key={f.title} size={{ xs: 12, sm: 6, md: 4 }}>
+              <Box sx={{
+                bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider',
+                borderRadius: 4, p: 3, textAlign: 'left', height: '100%',
+                transition: 'transform 0.2s, border-color 0.2s',
+                '&:hover': { transform: 'translateY(-4px)', borderColor: 'primary.main' },
+              }}>
+                <Typography variant="h4" sx={{ mb: 2 }}>{f.icon}</Typography>
+                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>{f.title}</Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.6 }}>{f.desc}</Typography>
+              </Box>
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
 
-      <section className="landing-cta">
-        <h2>Ready to Transform Your Business?</h2>
-        <p>Get started in minutes. No credit card required.</p>
-        <button className="landing-btn-primary hero-cta" onClick={() => navigate('/login')}>
-          Launch Cyber Business System →
-        </button>
-      </section>
+      <Box sx={{ textAlign: 'center', py: 10, bgcolor: 'background.paper', borderTop: '1px solid', borderBottom: '1px solid', borderColor: 'divider' }}>
+        <Container maxWidth="sm">
+          <Typography variant="h3" sx={{ fontWeight: 700, mb: 1.5 }}>Ready to Transform Your Business?</Typography>
+          <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>Get started in minutes. No credit card required.</Typography>
+          <Button variant="contained" size="large" sx={{ borderRadius: 30, px: 5 }} onClick={() => navigate('/login')}>
+            Launch Cyber Business System →
+          </Button>
+        </Container>
+      </Box>
 
-      <footer className="landing-footer">
-        <p>© 2026 Cyber Business System. Built for small businesses.</p>
-      </footer>
-    </div>
+      <Box sx={{ textAlign: 'center', py: 4, color: 'text.secondary' }}>
+        <Typography variant="caption">© 2026 Cyber Business System. Built for small businesses.</Typography>
+      </Box>
+    </Box>
   );
-};
-
-export default Landing;
+}

@@ -1,17 +1,19 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { authAPI } from '../services/api';
-import './Login.css';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Alert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
 
-const Register = () => {
+export default function Register() {
   const navigate = useNavigate();
   const [form, setForm] = useState({
-    business_name: '',
-    full_name: '',
-    username: '',
-    email: '',
-    password: '',
-    confirm_password: '',
+    business_name: '', full_name: '', username: '', email: '',
+    password: '', confirm_password: '',
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -32,12 +34,8 @@ const Register = () => {
     setLoading(true);
     try {
       const res = await authAPI.register({
-        business_name: form.business_name,
-        full_name: form.full_name,
-        username: form.username,
-        email: form.email,
-        password: form.password,
-        role: 'admin',
+        business_name: form.business_name, full_name: form.full_name,
+        username: form.username, email: form.email, password: form.password, role: 'admin',
       });
       localStorage.setItem('access_token', res.data.access_token);
       localStorage.setItem('user', JSON.stringify(res.data.user));
@@ -50,53 +48,40 @@ const Register = () => {
   };
 
   return (
-    <div className="login-page">
-      <div className="login-card glass-panel">
-        <div className="login-header">
-          <div className="login-logo">⚡</div>
-          <h1>Create Account</h1>
-          <p>Register your business to get started</p>
-        </div>
+    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', bgcolor: 'background.default', p: 2.5 }}>
+      <Card sx={{ maxWidth: 480, width: '100%', p: 4 }}>
+        <Stack sx={{ textAlign: 'center', mb: 4 }}>
+          <Typography variant="h3" sx={{ mb: 0.5 }}>Create Account</Typography>
+          <Typography variant="body2" color="text.secondary">Register your business to get started</Typography>
+        </Stack>
 
-        <form onSubmit={handleSubmit}>
-          {error && <div className="login-error">{error}</div>}
+        <Box component="form" onSubmit={handleSubmit}>
+          {error && <Alert severity="error" sx={{ mb: 2.5 }}>{error}</Alert>}
 
-          <div className="input-group">
-            <label>Business Name</label>
-            <input name="business_name" placeholder="Your business name" value={form.business_name} onChange={handleChange} required autoFocus />
-          </div>
-          <div className="input-group">
-            <label>Full Name</label>
-            <input name="full_name" placeholder="John Doe" value={form.full_name} onChange={handleChange} required />
-          </div>
-          <div className="input-group">
-            <label>Username</label>
-            <input name="username" placeholder="Choose a username" value={form.username} onChange={handleChange} required />
-          </div>
-          <div className="input-group">
-            <label>Email</label>
-            <input type="email" name="email" placeholder="john@example.com" value={form.email} onChange={handleChange} required />
-          </div>
-          <div className="input-group">
-            <label>Password</label>
-            <input type="password" name="password" placeholder="Min 6 characters" value={form.password} onChange={handleChange} required />
-          </div>
-          <div className="input-group">
-            <label>Confirm Password</label>
-            <input type="password" name="confirm_password" placeholder="Repeat password" value={form.confirm_password} onChange={handleChange} required />
-          </div>
+          <TextField fullWidth size="small" label="Business Name" name="business_name"
+            value={form.business_name} onChange={handleChange} required autoFocus sx={{ mb: 2 }} />
+          <TextField fullWidth size="small" label="Full Name" name="full_name"
+            value={form.full_name} onChange={handleChange} required sx={{ mb: 2 }} />
+          <TextField fullWidth size="small" label="Username" name="username"
+            value={form.username} onChange={handleChange} required sx={{ mb: 2 }} />
+          <TextField fullWidth size="small" type="email" label="Email" name="email"
+            value={form.email} onChange={handleChange} required sx={{ mb: 2 }} />
+          <TextField fullWidth size="small" type="password" label="Password" name="password"
+            value={form.password} onChange={handleChange} required
+            helperText="Min 6 characters" sx={{ mb: 2 }} />
+          <TextField fullWidth size="small" type="password" label="Confirm Password" name="confirm_password"
+            value={form.confirm_password} onChange={handleChange} required sx={{ mb: 3 }} />
 
-          <button type="submit" className="btn-primary w-full" disabled={loading}>
+          <Button type="submit" fullWidth variant="contained" size="large" disabled={loading}>
             {loading ? 'Creating account...' : 'Create Account'}
-          </button>
-        </form>
+          </Button>
+        </Box>
 
-        <p className="auth-switch">
-          Already have an account? <Link to="/login">Sign in</Link>
-        </p>
-      </div>
-    </div>
+        <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', mt: 3 }}>
+          Already have an account?{' '}
+          <Link to="/login" style={{ color: 'inherit', fontWeight: 600 }}>Sign in</Link>
+        </Typography>
+      </Card>
+    </Box>
   );
-};
-
-export default Register;
+}
