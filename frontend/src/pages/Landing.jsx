@@ -36,8 +36,8 @@ const Landing = () => {
           <div className="hero-card">
             <div className="hero-card-header">💰 Today's Sales</div>
             <div className="hero-card-body">
-              <div className="hero-stat"><span className="hero-stat-value">$1,247</span><span className="hero-stat-label">Revenue</span></div>
-              <div className="hero-stat"><span className="hero-stat-value">$342</span><span className="hero-stat-label">Profit</span></div>
+              <div className="hero-stat"><span className="hero-stat-value">TSh 1,247</span><span className="hero-stat-label">Revenue</span></div>
+              <div className="hero-stat"><span className="hero-stat-value">TSh 342</span><span className="hero-stat-label">Profit</span></div>
               <div className="hero-stat"><span className="hero-stat-value">23</span><span className="hero-stat-label">Items Sold</span></div>
             </div>
           </div>

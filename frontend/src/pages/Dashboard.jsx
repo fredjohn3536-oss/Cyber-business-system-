@@ -65,9 +65,9 @@ function OrdersTable({ orders }) {
             <TableRow key={row.id} hover sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
               <TableCell><Link color="secondary" underline="hover">{row.receipt_number}</Link></TableCell>
               <TableCell>{row.items_count} items</TableCell>
-              <TableCell align="right">${parseFloat(row.total_amount).toFixed(2)}</TableCell>
+              <TableCell align="right">TSh {parseFloat(row.total_amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}</TableCell>
               <TableCell align="right" sx={{ color: row.total_profit >= 0 ? 'success.main' : 'error.main' }}>
-                ${parseFloat(row.total_profit).toFixed(2)}
+                TSh {parseFloat(row.total_profit).toLocaleString('en-US', { minimumFractionDigits: 2 })}
               </TableCell>
               <TableCell>{new Date(row.sale_date).toLocaleDateString()}</TableCell>
             </TableRow>
@@ -155,17 +155,17 @@ function IncomeAreaChart({ monthlyData, weeklyData }) {
   );
 }
 
-function MonthlyBarChart() {
+function MonthlyBarChart({ weeklyData }) {
   const theme = useTheme();
-  const data = [80, 95, 70, 42, 65, 55, 78];
-  const xLabels = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
+  const labels = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
+  const data = weeklyData?.series?.[0]?.data || [0, 0, 0, 0, 0, 0, 0];
   const axisFonstyle = { fontSize: 10, fill: theme.palette.text.secondary };
 
   return (
     <BarChart
       height={380}
-      series={[{ data, label: 'Series-1' }]}
-      xAxis={[{ data: xLabels, scaleType: 'band', disableLine: true, disableTicks: true, tickLabelStyle: axisFonstyle }]}
+      series={[{ data, label: 'Income' }]}
+      xAxis={[{ data: labels, scaleType: 'band', disableLine: true, disableTicks: true, tickLabelStyle: axisFonstyle }]}
       leftAxis={null}
       slotProps={{ legend: { hidden: true }, bar: { rx: 5, ry: 5 } }}
       axisHighlight={{ x: 'none' }}
@@ -222,7 +222,7 @@ function SalesChart({ monthlyData }) {
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 1 }}>
         <Box>
           <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>Net Profit</Typography>
-          <Typography variant="h4">${totalProfit.toFixed(2)}</Typography>
+          <Typography variant="h4">TSh {totalProfit.toLocaleString('en-US', { minimumFractionDigits: 2 })}</Typography>
         </Box>
         <Stack direction="row">
           <FormControlLabel control={<Checkbox checked={showIncome} onChange={() => setShowIncome(!showIncome)} sx={{ '&.Mui-checked': { color: warningColor } }} />} label="Income" />
@@ -312,8 +312,8 @@ export default function Dashboard() {
       </Grid>
 
       <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-        <StatCard title="Total Revenue" count={`$${Number(totalRevenue).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
-          percentage={totalRevenue > 0 ? 59.3 : 0} extra={`$${Number(totalProfit).toFixed(2)} total profit`} icon={<DollarOutlined />} />
+        <StatCard title="Total Revenue" count={`TSh ${Number(totalRevenue).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+          percentage={totalRevenue > 0 ? 59.3 : 0} extra={`TSh ${Number(totalProfit).toFixed(2)} total profit`} icon={<DollarOutlined />} />
       </Grid>
       <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
         <StatCard title="Products" count={String(totalProducts)} percentage={70.5} extra={`${productsSold} items sold total`} icon={<BoxPlotOutlined />} />
@@ -340,10 +340,10 @@ export default function Dashboard() {
           <Box sx={{ p: 3, pb: 0 }}>
             <Stack sx={{ gap: 2 }}>
               <Typography variant="body2" color="text.secondary">This Week Statistics</Typography>
-              <Typography variant="h3">${Number(totalRevenue).toLocaleString('en-US', { minimumFractionDigits: 2 })}</Typography>
+              <Typography variant="h3">TSh {Number(totalRevenue).toLocaleString('en-US', { minimumFractionDigits: 2 })}</Typography>
             </Stack>
           </Box>
-          <MonthlyBarChart />
+          <MonthlyBarChart weeklyData={weeklyData} />
         </MainCard>
       </Grid>
 
@@ -402,8 +402,8 @@ export default function Dashboard() {
                 <ListItem key={i} component={ListItemButton} divider={i < recentSales.length - 1}
                   secondaryAction={
                     <Stack alignItems="flex-end">
-                      <Typography variant="subtitle2" noWrap>+ ${s.income.toFixed(2)}</Typography>
-                      <Typography variant="caption" color="text.secondary" noWrap>${s.profit.toFixed(2)} profit</Typography>
+                      <Typography variant="subtitle2" noWrap>+ TSh {s.income.toLocaleString('en-US', { minimumFractionDigits: 2 })}</Typography>
+                      <Typography variant="caption" color="text.secondary" noWrap>TSh {s.profit.toLocaleString('en-US', { minimumFractionDigits: 2 })} profit</Typography>
                     </Stack>
                   }
                 >

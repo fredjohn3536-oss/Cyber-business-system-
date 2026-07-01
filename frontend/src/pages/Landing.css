@@ -16,7 +16,7 @@
 .landing-logo {
   font-size: 1.3rem;
   font-weight: 700;
-  background: linear-gradient(to right, #fff, #a1a1aa);
+  background: linear-gradient(to right, var(--text-primary), var(--text-secondary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -137,7 +137,7 @@
   border-radius: 24px;
   padding: 28px;
   width: 320px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--shadow-lg);
 }
 
 .hero-card-header {

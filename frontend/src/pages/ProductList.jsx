@@ -142,9 +142,9 @@ const ProductList = () => {
                       </div>
                       <div className="pl-details">
                         <span>📦 <b>{product.qty}</b> in stock</span>
-                        <span>💰 Cost: ${product.buy?.toFixed(2)}</span>
-                        <span>💵 Sell: ${product.exp?.toFixed(2)}</span>
-                        <span>📈 Margin: ${((product.exp || 0) - (product.buy || 0)).toFixed(2)}</span>
+                        <span>💰 Cost: TSh {product.buy?.toFixed(2)}</span>
+                        <span>💵 Sell: TSh {product.exp?.toFixed(2)}</span>
+                        <span>📈 Margin: TSh {((product.exp || 0) - (product.buy || 0)).toFixed(2)}</span>
                       </div>
                       {product.qty <= 3 && <span className="status low">⚠️ Low stock</span>}
                     </div>

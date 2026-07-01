@@ -1,13 +1,15 @@
 import React, { useContext, useRef } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { Home, Package, DollarSign, Settings, LogOut, List, LayoutDashboard, Users } from 'lucide-react';
+import { Home, Package, DollarSign, Settings, LogOut, List, LayoutDashboard, Users, Sun, Moon } from 'lucide-react';
 import { StoreContext } from '../context/StoreContext';
 import { AuthContext } from '../context/AuthContext';
+import { ThemeContext } from '../context/ThemeContext';
 import './Sidebar.css';
 
 const Sidebar = () => {
   const { businessLogo, setBusinessLogo } = useContext(StoreContext);
   const { user, logout } = useContext(AuthContext);
+  const { mode, toggleTheme } = useContext(ThemeContext);
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
 
@@ -60,6 +62,10 @@ const Sidebar = () => {
       </nav>
 
       <div className="sidebar-footer">
+        <button className="theme-toggle-btn" onClick={toggleTheme}>
+          {mode === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+          <span>{mode === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
+        </button>
         <div className="user-profile">
           <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user?.full_name || 'Admin')}&background=1e293b&color=3b82f6`} alt="Profile" />
           <div className="user-info">

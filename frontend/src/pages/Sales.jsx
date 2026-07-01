@@ -104,8 +104,8 @@ const Sales = () => {
                 <strong className="product-name">{product.name}</strong>
                 <div className="product-stats">
                   <span>📦 Stock: <b>{product.qty}</b></span>
-                  <span>💰 Cost: ${product.buy?.toFixed(2)}</span>
-                  <span>💵 Expected: ${product.exp?.toFixed(2)}</span>
+                  <span>💰 Cost: TSh {product.buy?.toFixed(2)}</span>
+                  <span>💵 Expected: TSh {product.exp?.toFixed(2)}</span>
                 </div>
                 {product.qty <= 3 ? <span className="status low">⚠️ Low stock</span> : <span className="status ok">✓ In Stock</span>}
               </div>
@@ -138,9 +138,9 @@ const Sales = () => {
           <div className="receipt-details">
             <p><strong>Item:</strong> {receipt.name}</p>
             <p><strong>Quantity:</strong> {receipt.qty}</p>
-            <p><strong>Unit Price:</strong> ${receipt.price.toFixed(2)}</p>
-            <p><strong>Total Income:</strong> ${receipt.income.toFixed(2)}</p>
-            <p className="profit"><strong>Profit:</strong> ${receipt.profit.toFixed(2)}</p>
+            <p><strong>Unit Price:</strong> TSh {receipt.price.toFixed(2)}</p>
+            <p><strong>Total Income:</strong> TSh {receipt.income.toFixed(2)}</p>
+            <p className="profit"><strong>Profit:</strong> TSh {receipt.profit.toFixed(2)}</p>
             <p><strong>Time:</strong> {new Date(receipt.timestamp).toLocaleString()}</p>
             <hr className="receipt-divider"/>
             <p className="success-msg">✅ Transaction completed successfully.</p>

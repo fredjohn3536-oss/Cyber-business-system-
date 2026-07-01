@@ -40,7 +40,7 @@
 }
 
 .info-note {
-  background: rgba(24, 24, 27, 0.5);
+  background: var(--bg-secondary);
   border: 1px dashed var(--border-color);
   padding: 16px;
   border-radius: 12px;

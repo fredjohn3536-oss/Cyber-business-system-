@@ -105,8 +105,8 @@ export default function AdminDashboard() {
       </Grid>
 
       <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-        <StatCard title="Total Revenue" count={`$${Number(stats.total_revenue || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}`}
-          percentage={stats.total_revenue > 0 ? 15.2 : 0} extra={`${Number(stats.total_profit || 0).toFixed(2)} total profit`} icon={<DollarOutlined />} />
+        <StatCard title="Total Revenue" count={`TSh ${Number(stats.total_revenue || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}`}
+          percentage={stats.total_revenue > 0 ? 15.2 : 0} extra={`TSh ${Number(stats.total_profit || 0).toFixed(2)} total profit`} icon={<DollarOutlined />} />
       </Grid>
       <Grid size={{ xs: 12, sm: 6, md: 3 }}>
         <StatCard title="Active Users" count={String(stats.active_users || 0)} percentage={stats.total_users > 0 ? Math.round((stats.active_users / stats.total_users) * 100) : 0}

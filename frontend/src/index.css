@@ -1,28 +1,69 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
+[data-theme='dark'] {
+  --bg-primary: #09090b;
+  --bg-secondary: #18181b;
+  --bg-tertiary: #27272a;
+  --text-primary: #f8fafc;
+  --text-secondary: #a1a1aa;
+  --accent-primary: #3b82f6;
+  --accent-hover: #2563eb;
+  --accent-glow: rgba(59, 130, 246, 0.5);
+  --success: #22c55e;
+  --danger: #ef4444;
+  --warning: #facc15;
+  --border-color: #27272a;
+  --glass-bg: rgba(24, 24, 27, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 25px -3px rgba(0, 0, 0, 0.5);
+  --hover-bg: rgba(255, 255, 255, 0.05);
+  --sidebar-user-bg: rgba(255, 255, 255, 0.03);
+  --sidebar-user-hover: rgba(255, 255, 255, 0.06);
+}
+
+[data-theme='light'] {
+  --bg-primary: #f0f2f5;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #fafafa;
+  --text-primary: #212121;
+  --text-secondary: #757575;
+  --accent-primary: #3b82f6;
+  --accent-hover: #2563eb;
+  --accent-glow: rgba(59, 130, 246, 0.3);
+  --success: #22c55e;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --border-color: #e0e0e0;
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(0, 0, 0, 0.1);
+  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 25px -3px rgba(0, 0, 0, 0.1);
+  --hover-bg: rgba(0, 0, 0, 0.05);
+  --sidebar-user-bg: rgba(0, 0, 0, 0.03);
+  --sidebar-user-hover: rgba(0, 0, 0, 0.06);
+}
+
 :root {
   --bg-primary: #09090b;
   --bg-secondary: #18181b;
   --bg-tertiary: #27272a;
-  
   --text-primary: #f8fafc;
   --text-secondary: #a1a1aa;
-  
   --accent-primary: #3b82f6;
   --accent-hover: #2563eb;
   --accent-glow: rgba(59, 130, 246, 0.5);
-  
   --success: #22c55e;
   --danger: #ef4444;
   --warning: #facc15;
-  
   --border-color: #27272a;
   --glass-bg: rgba(24, 24, 27, 0.7);
   --glass-border: rgba(255, 255, 255, 0.1);
-  
   --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
   --shadow-lg: 0 10px 25px -3px rgba(0, 0, 0, 0.5);
-  
+  --hover-bg: rgba(255, 255, 255, 0.05);
+  --sidebar-user-bg: rgba(255, 255, 255, 0.03);
+  --sidebar-user-hover: rgba(255, 255, 255, 0.06);
   font-family: 'Inter', system-ui, sans-serif;
 }
 
@@ -37,6 +78,11 @@ body {
   color: var(--text-primary);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+*, *::before, *::after {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
 }
 
 a {

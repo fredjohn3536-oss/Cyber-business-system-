@@ -68,7 +68,7 @@
 
 .product-sell-card:hover {
   transform: translateX(4px);
-  border-color: rgba(255, 255, 255, 0.2);
+  border-color: var(--accent-primary);
 }
 
 .product-info {

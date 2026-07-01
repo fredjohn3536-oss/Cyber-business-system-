@@ -87,8 +87,8 @@ const Admin = () => {
           <div className="stats-grid">
             <div className="stat-card glass-panel">
               <h3>Total Revenue</h3>
-              <h2>${(displayStats.total_revenue ?? displayStats.totalRevenue).toFixed(2)}</h2>
-              <span className="trend positive">Profit: ${(displayStats.total_profit ?? displayStats.totalProfit).toFixed(2)}</span>
+              <h2>TSh {(displayStats.total_revenue ?? displayStats.totalRevenue).toLocaleString('en-US', { minimumFractionDigits: 2 })}</h2>
+              <span className="trend positive">Profit: TSh {(displayStats.total_profit ?? displayStats.totalProfit).toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
             </div>
             <div className="stat-card glass-panel">
               <h3>Products</h3>
@@ -122,7 +122,7 @@ const Admin = () => {
                 <div className="insight-item">
                   <span className="insight-label">Avg Revenue per Sale</span>
                   <span className="insight-value">
-                    ${stats.total_sales > 0 ? (stats.total_revenue / stats.total_sales).toFixed(2) : '0.00'}
+                    TSh {stats.total_sales > 0 ? (stats.total_revenue / stats.total_sales).toFixed(2) : '0.00'}
                   </span>
                 </div>
                 <div className="insight-item">
