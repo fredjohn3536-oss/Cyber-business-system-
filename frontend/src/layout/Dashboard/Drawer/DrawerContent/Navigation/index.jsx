@@ -7,12 +7,14 @@ import NavGroup from './NavGroup';
 import NavItem from './NavItem';
 import menuItems from '../../../../../menu-items';
 import { useAuth } from '../../../../../context/AuthContext';
+import { useMenu } from '../../../../../api/menu';
 
 export default function Navigation() {
   const theme = useTheme();
   const { user } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+  const { drawerOpen } = useMenu();
 
   const isLoggedIn = !!user;
   const matchDownLg = useMediaQuery(theme.breakpoints.down('lg'));
@@ -46,7 +48,7 @@ export default function Navigation() {
 
       return (
         <List key={item.id} subheader={
-          item.title && (
+          item.title && drawerOpen && (
             <Typography variant="caption" display="block" sx={{ textTransform: 'uppercase', mt: 1.5 }}>
               {item.title}
             </Typography>
@@ -55,14 +57,14 @@ export default function Navigation() {
           {filteredChildren.map((child) => {
             if (child.type === 'group' && child.children) {
               return child.children.map((subChild) => (
-                subChild.type === 'item' ? <NavItem key={subChild.id} item={subChild} level={1} matchDownLg={matchDownLg} navigate={navigate} location={location} matchPath={matchPath} /> : null
+                subChild.type === 'item' ? <NavItem key={subChild.id} item={subChild} level={1} matchDownLg={matchDownLg} navigate={navigate} location={location} matchPath={matchPath} drawerOpen={drawerOpen} /> : null
               ));
             }
             if (child.type === 'item') {
-              return <NavItem key={child.id} item={child} level={1} matchDownLg={matchDownLg} navigate={navigate} location={location} matchPath={matchPath} />;
+              return <NavItem key={child.id} item={child} level={1} matchDownLg={matchDownLg} navigate={navigate} location={location} matchPath={matchPath} drawerOpen={drawerOpen} />;
             }
             if (child.type === 'collapse') {
-              return <NavGroup key={child.id} item={child} level={1} matchDownLg={matchDownLg} navigate={navigate} location={location} matchPath={matchPath} />;
+              return <NavGroup key={child.id} item={child} level={1} matchDownLg={matchDownLg} navigate={navigate} location={location} matchPath={matchPath} drawerOpen={drawerOpen} />;
             }
             return null;
           })}
