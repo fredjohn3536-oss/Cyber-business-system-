@@ -36,7 +36,7 @@ const Sidebar = () => {
       </div>
 
       <nav className="sidebar-nav">
-        <NavLink to="/" className={({isActive}) => isActive ? "nav-item active" : "nav-item"}>
+        <NavLink to="/dashboard" className={({isActive}) => isActive ? "nav-item active" : "nav-item"}>
           <Home size={20} /><span>Dashboard</span>
         </NavLink>
         <NavLink to="/products" className={({isActive}) => isActive ? "nav-item active" : "nav-item"}>

@@ -8,6 +8,7 @@ import Products from './pages/Products';
 import Sales from './pages/Sales';
 import Admin from './pages/Admin';
 import Login from './pages/Login';
+import Landing from './pages/Landing';
 import ProductList from './pages/ProductList';
 
 function ProtectedLayout({ children }) {
@@ -25,19 +26,20 @@ function ProtectedLayout({ children }) {
 function PublicRoute({ children }) {
   const { isAuthenticated, loading } = useContext(AuthContext);
   if (loading) return null;
-  if (isAuthenticated) return <Navigate to="/" replace />;
+  if (isAuthenticated) return <Navigate to="/dashboard" replace />;
   return children;
 }
 
 function App() {
   return (
-    <AuthProvider>
-      <StoreProvider>
-        <BrowserRouter>
+    <BrowserRouter>
+      <AuthProvider>
+        <StoreProvider>
           <Routes>
+            <Route path="/" element={<Landing />} />
             <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
 
-            <Route path="/" element={<ProtectedLayout><Home /></ProtectedLayout>} />
+            <Route path="/dashboard" element={<ProtectedLayout><Home /></ProtectedLayout>} />
             <Route path="/products" element={<ProtectedLayout><Products /></ProtectedLayout>} />
             <Route path="/products/list" element={<ProtectedLayout><ProductList /></ProtectedLayout>} />
             <Route path="/sales" element={<ProtectedLayout><Sales /></ProtectedLayout>} />
@@ -45,9 +47,9 @@ function App() {
 
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
-        </BrowserRouter>
-      </StoreProvider>
-    </AuthProvider>
+        </StoreProvider>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
 

@@ -1,98 +1,88 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useCallback } from 'react';
 import { productsAPI, salesAPI } from '../services/api';
 
 export const StoreContext = createContext();
 
-const DUMMY_PRODUCTS = [
-  { name: 'iPhone 15 Pro', cat: 'Electronics', qty: 12, buy: 899.00, exp: 1099.00, createdAt: Date.now() - 100000 },
-  { name: 'MacBook Air M2', cat: 'Electronics', qty: 3, buy: 1050.00, exp: 1299.00, createdAt: Date.now() - 90000 },
-  { name: 'Office Desk Chair', cat: 'Furniture', qty: 15, buy: 85.00, exp: 150.00, createdAt: Date.now() - 80000 },
-  { name: 'Wireless Mouse', cat: 'Electronics', qty: 50, buy: 15.00, exp: 35.00, createdAt: Date.now() - 70000 },
-  { name: 'Coffee Beans 1kg', cat: 'Food', qty: 45, buy: 12.00, exp: 24.00, createdAt: Date.now() - 60000 },
-];
-
-const DUMMY_SALES = [
-  { name: 'iPhone 15 Pro', qty: 1, price: 1099.00, income: 1099.00, profit: 200.00, timestamp: Date.now() - 86400000 },
-  { name: 'Wireless Mouse', qty: 2, price: 35.00, income: 70.00, profit: 40.00, timestamp: Date.now() - 43200000 },
-  { name: 'Coffee Beans 1kg', qty: 3, price: 24.00, income: 72.00, profit: 36.00, timestamp: Date.now() - 10000 },
-];
-
 export const StoreProvider = ({ children }) => {
-  const [products, setProducts] = useState(() => {
-    const saved = localStorage.getItem('p');
-    if (saved && saved !== '[]') return JSON.parse(saved);
-    return DUMMY_PRODUCTS;
-  });
-
-  const [sales, setSales] = useState(() => {
-    const saved = localStorage.getItem('s');
-    if (saved && saved !== '[]') return JSON.parse(saved);
-    return DUMMY_SALES;
-  });
-
+  const [products, setProducts] = useState([]);
+  const [sales, setSales] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [businessLogo, setBusinessLogo] = useState(() => {
     return localStorage.getItem('businessLogo') || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233b82f6'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0 13c-2.33 0-4.31-1.46-5.11-3.5h10.22c-.8 2.04-2.78 3.5-5.11 3.5z'/%3E%3C/svg%3E";
   });
 
-  const [connected, setConnected] = useState(false);
+  const mapProduct = (p) => ({
+    id: p.id,
+    name: p.product_name,
+    cat: p.category_name || 'General',
+    qty: p.stock_quantity,
+    buy: parseFloat(p.buying_price),
+    exp: parseFloat(p.selling_price),
+    createdAt: Date.parse(p.created_at),
+  });
 
-  useEffect(() => { localStorage.setItem('p', JSON.stringify(products)); }, [products]);
-  useEffect(() => { localStorage.setItem('s', JSON.stringify(sales)); }, [sales]);
-  useEffect(() => { localStorage.setItem('businessLogo', businessLogo); }, [businessLogo]);
+  const mapSale = (s) => ({
+    id: s.id,
+    name: s.items?.[0]?.product_name || `Sale #${s.id}`,
+    qty: s.items?.reduce((sum, i) => sum + i.quantity, 0) || 0,
+    price: parseFloat(s.total_amount),
+    income: parseFloat(s.total_amount),
+    profit: parseFloat(s.total_profit),
+    timestamp: Date.parse(s.created_at),
+  });
 
-  useEffect(() => {
+  const fetchAll = useCallback(async () => {
     const token = localStorage.getItem('access_token');
-    if (token) {
-      productsAPI.list({}).then(res => {
-        if (res.data && res.data.length > 0) {
-          const mapped = res.data.map(p => ({
-            id: p.id,
-            name: p.product_name,
-            cat: p.category_name || 'General',
-            qty: p.stock_quantity,
-            buy: parseFloat(p.buying_price),
-            exp: parseFloat(p.selling_price),
-            createdAt: Date.parse(p.created_at),
-          }));
-          setProducts(mapped);
-          setConnected(true);
-        }
-      }).catch(() => {});
+    if (!token) {
+      setLoading(false);
+      return;
+    }
+    try {
+      const [prodRes, salesRes] = await Promise.all([
+        productsAPI.list({}),
+        salesAPI.list(),
+      ]);
+      setProducts(prodRes.data.map(mapProduct));
+      setSales(salesRes.data.map(mapSale));
+    } catch {
+      const cachedP = localStorage.getItem('p');
+      const cachedS = localStorage.getItem('s');
+      if (cachedP) setProducts(JSON.parse(cachedP));
+      if (cachedS) setSales(JSON.parse(cachedS));
+    } finally {
+      setLoading(false);
     }
   }, []);
 
+  useEffect(() => { fetchAll(); }, [fetchAll]);
+
+  useEffect(() => {
+    if (products.length) localStorage.setItem('p', JSON.stringify(products));
+  }, [products]);
+
+  useEffect(() => {
+    if (sales.length) localStorage.setItem('s', JSON.stringify(sales));
+  }, [sales]);
+
+  useEffect(() => { localStorage.setItem('businessLogo', businessLogo); }, [businessLogo]);
+
   const addProduct = async (product) => {
-    const exists = products.find(p => p.name.toLowerCase() === product.name.toLowerCase());
-    if (exists && !window.confirm(`"${product.name}" already exists. Add another with same name?`)) return false;
-
-    if (connected) {
-      try {
-        const payload = {
-          product_name: product.name,
-          stock_quantity: product.qty,
-          buying_price: product.buy,
-          selling_price: product.exp,
-        };
-        await productsAPI.create(payload);
-        const res = await productsAPI.list({});
-        const mapped = res.data.map(p => ({
-          id: p.id,
-          name: p.product_name,
-          cat: product.cat,
-          qty: p.stock_quantity,
-          buy: parseFloat(p.buying_price),
-          exp: parseFloat(p.selling_price),
-          createdAt: Date.now(),
-        }));
-        setProducts(mapped);
-        return true;
-      } catch {
-        // fall through to local
-      }
+    const payload = {
+      product_name: product.name,
+      stock_quantity: product.qty,
+      buying_price: product.buy,
+      selling_price: product.exp,
+    };
+    try {
+      const res = await productsAPI.create(payload);
+      setProducts(prev => [...prev, mapProduct(res.data)]);
+      return true;
+    } catch (err) {
+      if (err.response?.status === 401) return false;
+      const offline = { ...product, id: Date.now(), createdAt: Date.now() };
+      setProducts(prev => [...prev, offline]);
+      return true;
     }
-
-    setProducts([...products, { ...product, createdAt: Date.now() }]);
-    return true;
   };
 
   const processSale = async (productName, qty, price) => {
@@ -101,7 +91,10 @@ export const StoreProvider = ({ children }) => {
     const product = products[pIndex];
     if (product.qty < qty) return null;
 
-    if (connected && product.id) {
+    const income = qty * price;
+    const profit = (price - product.buy) * qty;
+
+    if (product.id) {
       try {
         const res = await salesAPI.create({
           items: [{ product_id: product.id, quantity: qty, selling_price: price }],
@@ -111,29 +104,22 @@ export const StoreProvider = ({ children }) => {
         updated[pIndex].qty -= qty;
         setProducts(updated);
 
-        const saleRecord = {
-          name: product.name,
-          qty,
-          price,
-          income: qty * price,
-          profit: (price - product.buy) * qty,
-          timestamp: Date.now(),
-        };
+        const saleRecord = { name: product.name, qty, price, income, profit, timestamp: Date.now() };
         setSales(prev => [...prev, saleRecord]);
         return saleRecord;
       } catch {
-        // fall through
+        const updated = [...products];
+        updated[pIndex].qty -= qty;
+        setProducts(updated);
+        const saleRecord = { name: product.name, qty, price, income, profit, timestamp: Date.now() };
+        setSales(prev => [...prev, saleRecord]);
+        return saleRecord;
       }
     }
 
-    const income = qty * price;
-    const costBasis = qty * product.buy;
-    const profit = income - costBasis;
-
-    const newProducts = [...products];
-    newProducts[pIndex].qty -= qty;
-    setProducts(newProducts);
-
+    const updated = [...products];
+    updated[pIndex].qty -= qty;
+    setProducts(updated);
     const saleRecord = { name: product.name, qty, price, income, profit, timestamp: Date.now() };
     setSales(prev => [...prev, saleRecord]);
     return saleRecord;
@@ -143,7 +129,7 @@ export const StoreProvider = ({ children }) => {
     <StoreContext.Provider value={{
       products, setProducts, sales, setSales,
       businessLogo, setBusinessLogo,
-      addProduct, processSale, connected,
+      addProduct, processSale, loading, fetchAll,
     }}>
       {children}
     </StoreContext.Provider>
