@@ -8,6 +8,7 @@ import Products from './pages/Products';
 import Sales from './pages/Sales';
 import Admin from './pages/Admin';
 import Login from './pages/Login';
+import Register from './pages/Register';
 import Landing from './pages/Landing';
 import ProductList from './pages/ProductList';
 
@@ -38,6 +39,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Landing />} />
             <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+            <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
 
             <Route path="/dashboard" element={<ProtectedLayout><Home /></ProtectedLayout>} />
             <Route path="/products" element={<ProtectedLayout><Products /></ProtectedLayout>} />

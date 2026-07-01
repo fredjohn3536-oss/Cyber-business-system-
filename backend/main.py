@@ -3,10 +3,16 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from sqlalchemy import text
+
 from database import engine, Base
 from routers import auth, categories, products, sales, dashboard, stock, admin
 
-Base.metadata.create_all(bind=engine)
+try:
+    Base.metadata.create_all(bind=engine)
+except Exception as e:
+    print(f"WARNING: Could not connect to database: {e}")
+    print("The server will start, but database-dependent features will fail.")
 
 app = FastAPI(title="Cyber Business System API")
 
@@ -34,4 +40,11 @@ def read_root():
 
 @app.get("/health")
 def health_check():
-    return {"status": "ok"}
+    db_status = "disconnected"
+    try:
+        with engine.connect() as conn:
+            conn.execute(text("SELECT 1"))
+            db_status = "connected"
+    except Exception:
+        db_status = "disconnected"
+    return {"status": "ok", "database": db_status}

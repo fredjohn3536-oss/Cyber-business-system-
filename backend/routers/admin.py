@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from database import get_db
 from models import User, Business, AuditLog
-from schemas import UserCreate, UserOut, BusinessCreate, BusinessOut, AuditLogOut
+from schemas import UserCreate, UserOut, BusinessCreate, BusinessUpdate, BusinessOut, AuditLogOut
 from auth import hash_password, get_current_user, require_role
 
 router = APIRouter(prefix="/api/admin", tags=["Admin"])
@@ -73,7 +73,7 @@ def get_business(
 
 @router.put("/business", response_model=BusinessOut)
 def update_business(
-    req: BusinessCreate,
+    req: BusinessUpdate,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_role('super_admin', 'admin')),
 ):

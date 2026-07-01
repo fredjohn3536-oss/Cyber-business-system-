@@ -34,12 +34,21 @@ def register(req: UserCreate, db: Session = Depends(get_db)):
     if existing:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Username or email already exists")
 
-    business = db.query(Business).filter(Business.id == req.business_id).first()
-    if not business:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Business not found")
+    if req.business_id:
+        business = db.query(Business).filter(Business.id == req.business_id).first()
+        if not business:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Business not found")
+        biz_id = req.business_id
+    elif req.business_name:
+        business = Business(business_name=req.business_name)
+        db.add(business)
+        db.flush()
+        biz_id = business.id
+    else:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Either business_id or business_name is required")
 
     user = User(
-        business_id=req.business_id,
+        business_id=biz_id,
         full_name=req.full_name,
         username=req.username,
         email=req.email,

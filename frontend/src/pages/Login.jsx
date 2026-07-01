@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import './Login.css';
 
@@ -63,6 +63,10 @@ const Login = () => {
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
+
+        <p className="auth-switch">
+          Don't have an account? <Link to="/register">Sign up</Link>
+        </p>
       </div>
     </div>
   );

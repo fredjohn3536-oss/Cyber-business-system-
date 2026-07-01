@@ -12,6 +12,14 @@ class BusinessCreate(BaseModel):
     address: Optional[str] = None
 
 
+class BusinessUpdate(BaseModel):
+    business_name: Optional[str] = None
+    logo_url: Optional[str] = None
+    phone: Optional[str] = None
+    email: Optional[str] = None
+    address: Optional[str] = None
+
+
 class BusinessOut(BusinessCreate):
     id: int
     created_at: datetime
@@ -21,7 +29,8 @@ class BusinessOut(BusinessCreate):
 
 
 class UserCreate(BaseModel):
-    business_id: int
+    business_id: Optional[int] = None
+    business_name: Optional[str] = None
     full_name: str
     username: str
     email: Optional[str] = None

@@ -10,6 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/icons": "^6.3.2",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/material": "^9.1.2",
+    "@mui/system": "^9.1.2",
+    "@mui/x-charts": "^9.7.0",
     "axios": "^1.18.1",
     "lucide-react": "^1.21.0",
     "react": "^19.2.7",
